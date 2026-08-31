@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Sports77HD Stream</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background-color: #000; overflow: hidden; }
+    .stream-box { width: 100%; height: 100vh; position: relative; }
+    .stream-box iframe { width: 100%; height: 100%; border: 0; }
+    
+    /* Layer transparan penangkap klik iklan */
+    #ad-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 99;
+      background: transparent;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stream-box">
+    <!-- Overlay iklan berada tepat di atas iframe -->
+    <div id="ad-overlay"></div>
+    <iframe id="video-iframe" src="" title="Live Stream" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+  </div>
+
+  <script>
+    // DAFTAR PERTANDINGAN HARI INI
+    const matches = {
+      "roma": { title: "Lecce vs AS Roma", src: "https://starballtv010.blogspot.com/2026/08/lero.html?m=1" },
+      "Arsenal": { title: "Aston Villa vs Arsenal", src: "https://starballtv010.blogspot.com/2026/08/asar.html?m=1" },
+      "barcelona": { title: "Barcelona vs Vallecano", src: "https://starballtv010.blogspot.com/2026/08/bara.html?m=1" },
+      "nal": { title: "Aston Villa vs Arsenal", src: "https://starballtv010.blogspot.com/2026/08/asar.html?m=1" },
+      "realmadrid": { title: "Real Madrid vs Malaga", src: "https://starballtv010.blogspot.com/2026/08/mama.html" },
+      "napoli": { title: "Napoli vs Como", src: "https://starballtv010.blogspot.com/2026/08/naco.html" },
+      "deportivo": { title: "Deportivo vs Valencia", src: "https://starballtv010.blogspot.com/2026/08/lava.html" },
+      "alqadsiah": { title: "Al Qadsiah vs Al Faisaly", src: "https://starballtv010.blogspot.com/2026/08/qafa.html" },
+      "intermilan": { title: "Cagliari vs Inter Milan", src: "https://starballtv010.blogspot.com/2026/08/cain.html" },
+      "lazio": { title: "Lazio vs Genoa", src: "https://starballtv010.blogspot.com/2026/08/lage.html" },
+      "monaco": { title: "AS Monaco vs Marseille", src: "https://starballtv010.blogspot.com/2026/08/moma.html" },
+      "motogp": { title: "AS Monaco vs Marseille", src: "https://starballtv010.blogspot.com/2026/07/gp.html?m=1" },
+      "celta": { title: "Celta vs Athletic Bilbao", src: "https://starballtv010.blogspot.com/2026/08/ceat.html" }
+    };
+
+    // Ambil parameter ?id= dari URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const matchId = (urlParams.get('id') || '').trim().toLowerCase();
+
+    // Pilih pertandingan berdasarkan ID (Default: chelsea)
+    const activeMatch = matches[matchId] || matches["chelsea"];
+
+    // Set sumber video dan judul
+    document.getElementById('video-iframe').src = activeMatch.src;
+    document.getElementById('page-title').innerText = "Sports77HD - " + activeMatch.title;
+
+    // LOGIKA IKLAN SHOPEE (Klik Pertama di Layar Video)
+    const overlay = document.getElementById('ad-overlay');
+    overlay.addEventListener('click', function() {
+      // Buka link Shopee di tab baru
+      window.open('https://s.shopee.co.id/2BE1TCTXbN', '_blank');
+      
+      // Hapus overlay transparan agar pengguna bisa langsung interaksi/play video di klik ke-2
+      overlay.remove();
+    });
+  </script>
+
+</body>
+</html>
