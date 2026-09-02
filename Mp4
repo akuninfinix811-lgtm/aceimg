@@ -4,13 +4,108 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="page-title">Sports77HD Stream</title>
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; background-color: #000; overflow: hidden; }
-    .stream-box { width: 100%; height: 100vh; position: relative; }
-    .stream-box iframe { width: 100%; height: 100%; border: 0; }
-    
-    /* Layer transparan penangkap klik iklan */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background-color: #000;
+    }
+
+    /* =========================
+       BANNER WHATSAPP
+       ========================= */
+    .wa-banner {
+      width: 100%;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 10px;
+      background: linear-gradient(90deg, #075e25, #16a34a);
+      text-decoration: none;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .wa-icon {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border-radius: 50%;
+      font-size: 21px;
+    }
+
+    .wa-content {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .wa-title {
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .wa-title span {
+      color: #6dff91;
+    }
+
+    .wa-subtitle {
+      margin-top: 2px;
+      font-size: 9px;
+      line-height: 12px;
+      opacity: .9;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .wa-join {
+      flex-shrink: 0;
+      padding: 7px 12px;
+      background: #fff;
+      color: #128c3a;
+      border-radius: 18px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    /* =========================
+       FRAME EMBED
+       ========================= */
+    .stream-box {
+      width: 100%;
+      height: calc(100vh - 58px);
+      position: relative;
+    }
+
+    .stream-box iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    /* =========================
+       LAYER PENANGKAP KLIK IKLAN
+       ========================= */
     #ad-overlay {
       position: absolute;
       top: 0;
@@ -21,52 +116,195 @@
       background: transparent;
       cursor: pointer;
     }
+
+    /* =========================
+       HP KECIL
+       ========================= */
+    @media (max-width: 480px) {
+      .wa-banner {
+        height: 58px;
+        padding: 7px 9px;
+        gap: 8px;
+      }
+
+      .wa-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 19px;
+      }
+
+      .wa-title {
+        font-size: 12px;
+      }
+
+      .wa-subtitle {
+        font-size: 8px;
+      }
+
+      .wa-join {
+        padding: 7px 10px;
+        font-size: 9px;
+      }
+    }
   </style>
 </head>
+
 <body>
 
+  <!-- =========================
+       BANNER JOIN WHATSAPP
+       GANTI LINK DI BAWAH
+       ========================= -->
+  <a
+    href="https://whatsapp.com/channel/0029Vb81XCS1t90j9iA6z93L"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="wa-banner"
+  >
+    <div class="wa-icon">💬</div>
+
+    <div class="wa-content">
+      <div class="wa-title">
+        Join Saluran <span>WhatsApp Pemersatu bangsa</span>
+      </div>
+
+      <div class="wa-subtitle">
+        Dapatkan update video Pemersatu Bangsa, jadwal & info terbaru!
+      </div>
+    </div>
+
+    <div class="wa-join">JOIN</div>
+  </a>
+
+  <!-- =========================
+       FRAME EMBED
+       ========================= -->
   <div class="stream-box">
-    <!-- Overlay iklan berada tepat di atas iframe -->
+
+    <!-- Overlay iklan -->
     <div id="ad-overlay"></div>
-    <iframe id="video-iframe" src="" title="Live Stream" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+
+    <iframe
+      id="video-iframe"
+      src=""
+      title="Live Stream"
+      allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+      allowfullscreen>
+    </iframe>
+
   </div>
 
   <script>
-    // DAFTAR PERTANDINGAN HARI INI
+    // =========================
+    // DAFTAR PERTANDINGAN
+    // =========================
     const matches = {
-      "roma": { title: "Lecce vs AS Roma", src: "https://starballtv010.blogspot.com/2026/08/lero.html?m=1" },
-      "Arsenal": { title: "Aston Villa vs Arsenal", src: "https://starballtv010.blogspot.com/2026/08/asar.html?m=1" },
-      "barcelona": { title: "Barcelona vs Vallecano", src: "https://starballtv010.blogspot.com/2026/08/bara.html?m=1" },
-      "nal": { title: "Aston Villa vs Arsenal", src: "https://starballtv010.blogspot.com/2026/08/asar.html?m=1" },
-      "realmadrid": { title: "Real Madrid vs Malaga", src: "https://starballtv010.blogspot.com/2026/08/mama.html" },
-      "napoli": { title: "Napoli vs Como", src: "https://starballtv010.blogspot.com/2026/08/naco.html" },
-      "deportivo": { title: "Deportivo vs Valencia", src: "https://starballtv010.blogspot.com/2026/08/lava.html" },
-      "alqadsiah": { title: "Al Qadsiah vs Al Faisaly", src: "https://starballtv010.blogspot.com/2026/08/qafa.html" },
-      "intermilan": { title: "Cagliari vs Inter Milan", src: "https://starballtv010.blogspot.com/2026/08/cain.html" },
-      "lazio": { title: "Lazio vs Genoa", src: "https://starballtv010.blogspot.com/2026/08/lage.html" },
-      "monaco": { title: "AS Monaco vs Marseille", src: "https://starballtv010.blogspot.com/2026/08/moma.html" },
-      "motogp": { title: "AS Monaco vs Marseille", src: "https://starballtv010.blogspot.com/2026/07/gp.html?m=1" },
-      "celta": { title: "Celta vs Athletic Bilbao", src: "https://starballtv010.blogspot.com/2026/08/ceat.html" }
+      "roma": {
+        title: "Lecce vs AS Roma",
+        src: "https://starballtv010.blogspot.com/2026/08/lero.html?m=1"
+      },
+
+      "arsenal": {
+        title: "Aston Villa vs Arsenal",
+        src: "https://starballtv010.blogspot.com/2026/08/asar.html?m=1"
+      },
+
+      "barcelona": {
+        title: "Barcelona vs Vallecano",
+        src: "https://starballtv010.blogspot.com/2026/08/bara.html?m=1"
+      },
+
+      "nal": {
+        title: "Aston Villa vs Arsenal",
+        src: "https://starballtv010.blogspot.com/2026/08/asar.html?m=1"
+      },
+
+      "realmadrid": {
+        title: "Real Madrid vs Malaga",
+        src: "https://starballtv010.blogspot.com/2026/08/mama.html"
+      },
+
+      "napoli": {
+        title: "Napoli vs Como",
+        src: "https://starballtv010.blogspot.com/2026/08/naco.html"
+      },
+
+      "deportivo": {
+        title: "Deportivo vs Valencia",
+        src: "https://starballtv010.blogspot.com/2026/08/lava.html"
+      },
+
+      "alqadsiah": {
+        title: "Al Qadsiah vs Al Faisaly",
+        src: "https://starballtv010.blogspot.com/2026/08/qafa.html"
+      },
+
+      "intermilan": {
+        title: "Cagliari vs Inter Milan",
+        src: "https://starballtv010.blogspot.com/2026/08/cain.html"
+      },
+
+      "lazio": {
+        title: "Lazio vs Genoa",
+        src: "https://starballtv010.blogspot.com/2026/08/lage.html"
+      },
+
+      "monaco": {
+        title: "AS Monaco vs Marseille",
+        src: "https://starballtv010.blogspot.com/2026/08/moma.html"
+      },
+
+      "motogp": {
+        title: "MotoGP",
+        src: "https://starballtv010.blogspot.com/2026/07/gp.html?m=1"
+      },
+
+      "celta": {
+        title: "Celta vs Athletic Bilbao",
+        src: "https://starballtv010.blogspot.com/2026/08/ceat.html"
+      }
     };
 
-    // Ambil parameter ?id= dari URL
+    // =========================
+    // AMBIL PARAMETER ?id=
+    // =========================
     const urlParams = new URLSearchParams(window.location.search);
-    const matchId = (urlParams.get('id') || '').trim().toLowerCase();
 
-    // Pilih pertandingan berdasarkan ID (Default: chelsea)
-    const activeMatch = matches[matchId] || matches["chelsea"];
+    const matchId = (urlParams.get("id") || "")
+      .trim()
+      .toLowerCase();
 
-    // Set sumber video dan judul
-    document.getElementById('video-iframe').src = activeMatch.src;
-    document.getElementById('page-title').innerText = "Sports77HD - " + activeMatch.title;
+    // Default aman jika ID tidak ditemukan
+    const fallbackMatch = {
+      title: "Live Stream",
+      src: "about:blank"
+    };
 
-    // LOGIKA IKLAN SHOPEE (Klik Pertama di Layar Video)
-    const overlay = document.getElementById('ad-overlay');
-    overlay.addEventListener('click', function() {
-      // Buka link Shopee di tab baru
-      window.open('https://s.shopee.co.id/2BE1TCTXbN', '_blank');
-      
-      // Hapus overlay transparan agar pengguna bisa langsung interaksi/play video di klik ke-2
+    const activeMatch = matches[matchId] || fallbackMatch;
+
+    // =========================
+    // SET SUMBER VIDEO & JUDUL
+    // =========================
+    document.getElementById("video-iframe").src = activeMatch.src;
+
+    document.getElementById("page-title").innerText =
+      "Sports77HD - " + activeMatch.title;
+
+    // =========================
+    // LOGIKA IKLAN SHOPEE
+    // =========================
+    const overlay = document.getElementById("ad-overlay");
+
+    overlay.addEventListener("click", function () {
+
+      window.open(
+        "https://s.shopee.co.id/2BE1TCTXbN",
+        "_blank"
+      );
+
+      // Setelah klik pertama, overlay dihapus
+      // supaya pengguna bisa berinteraksi dengan iframe.
       overlay.remove();
     });
   </script>
