@@ -4,445 +4,347 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title id="page-title">bokepindo Stream</title>
+  <title>RedFlix</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <meta
+    name="description"
+    content="RedFlix - Website streaming dengan tema hitam dan merah."
+  >
 
-    html,
-    body {
-      width: 100%;
-      min-height: 100%;
-      background: #000;
-    }
+  <link rel="stylesheet" href="style.css">
 
-    body {
-      overflow-x: hidden;
-    }
-
-    /* =========================
-       WHATSAPP BANNER
-       ========================= */
-
-    .wa-banner {
-      width: 100%;
-      height: 58px;
-
-      display: flex;
-      align-items: center;
-
-      gap: 9px;
-      padding: 7px 10px;
-
-      background: linear-gradient(
-        90deg,
-        #075e25,
-        #16a34a
-      );
-
-      color: #fff;
-      text-decoration: none;
-
-      overflow: hidden;
-    }
-
-    .wa-icon {
-      width: 38px;
-      height: 38px;
-      min-width: 38px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background: #fff;
-      border-radius: 50%;
-
-      font-size: 21px;
-    }
-
-    .wa-content {
-      flex: 1;
-      min-width: 0;
-
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .wa-title {
-      font-size: 13px;
-      font-weight: 800;
-      line-height: 16px;
-
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .wa-title span {
-      color: #6dff91;
-    }
-
-    .wa-subtitle {
-      margin-top: 2px;
-
-      font-size: 9px;
-      line-height: 12px;
-
-      opacity: .9;
-
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .wa-join {
-      flex-shrink: 0;
-
-      padding: 7px 12px;
-
-      background: #fff;
-      color: #128c3a;
-
-      border-radius: 18px;
-
-      font-size: 10px;
-      font-weight: 800;
-    }
-
-    /* =========================
-       STREAM
-       ========================= */
-
-    .stream-box {
-      position: relative;
-
-      width: 100%;
-      height: calc(100vh - 58px);
-
-      min-height: 300px;
-
-      background: #000;
-
-      overflow: hidden;
-    }
-
-    .stream-box iframe {
-      display: block;
-
-      width: 100%;
-      height: 100%;
-
-      border: 0;
-
-      background: #000;
-
-      touch-action: auto;
-    }
-
-    /* =========================
-       IKLAN - SENTUH PERTAMA
-       ========================= */
-
-    #ad-overlay {
-      position: absolute;
-
-      inset: 0;
-
-      z-index: 10;
-
-      background: transparent;
-
-      cursor: pointer;
-
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    #ad-overlay.hidden {
-      display: none;
-    }
-
-    /* =========================
-       MOBILE
-       ========================= */
-
-    @media (max-width: 480px) {
-
-      .wa-banner {
-        height: 58px;
-        padding: 7px 9px;
-        gap: 8px;
-      }
-
-      .wa-icon {
-        width: 36px;
-        height: 36px;
-        min-width: 36px;
-
-        font-size: 19px;
-      }
-
-      .wa-title {
-        font-size: 12px;
-      }
-
-      .wa-subtitle {
-        font-size: 8px;
-      }
-
-      .wa-join {
-        padding: 7px 10px;
-        font-size: 9px;
-      }
-    }
-  </style>
+  <!-- HLS.js untuk video .m3u8 -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 
 <body>
 
-  <!-- =========================
-       WHATSAPP
-       ========================= -->
+  <!-- ================= HEADER ================= -->
 
-  <a
-    href="https://whatsapp.com/channel/0029Vb81XCS1t90j9iA6z93L"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="wa-banner"
-  >
+  <header class="header">
+    <div class="container header-inner">
 
-    <div class="wa-icon">
-      💬
-    </div>
+      <a href="#" class="logo">
+        <span>RED</span>FLIX
+      </a>
 
-    <div class="wa-content">
-
-      <div class="wa-title">
-        Join Saluran
-        <span>WhatsApp Pemersatu bangsa</span>
-      </div>
-
-      <div class="wa-subtitle">
-        Dapatkan update video Pemersatu Bangsa,
-        jadwal & info terbaru!
+      <div class="search-wrapper">
+        <input
+          type="search"
+          id="searchInput"
+          class="search-input"
+          placeholder="Cari film atau series..."
+          autocomplete="off"
+        >
       </div>
 
     </div>
-
-    <div class="wa-join">
-      JOIN
-    </div>
-
-  </a>
+  </header>
 
 
-  <!-- =========================
-       STREAM
-       ========================= -->
+  <!-- ================= MAIN ================= -->
 
-  <main class="stream-box">
+  <main>
 
-    <iframe
-      id="video-iframe"
-      src="about:blank"
-      title="Live Stream"
-      allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-      allowfullscreen>
-    </iframe>
+    <!-- ================= HERO ================= -->
 
-    <!--
-      Menangkap sentuhan pertama.
-      Setelah diklik, overlay langsung hilang.
-    -->
-    <div
-      id="ad-overlay"
-      role="button"
-      aria-label="Lanjutkan ke video"
-    ></div>
+    <section class="hero">
+
+      <div class="hero-video">
+        <video
+          id="heroVideo"
+          muted
+          autoplay
+          loop
+          playsinline
+          preload="metadata"
+        ></video>
+
+        <div class="hero-overlay"></div>
+      </div>
+
+      <div class="container hero-content">
+
+        <span class="hero-label">
+          FEATURED
+        </span>
+
+        <h1 id="heroTitle">
+          RedFlix
+        </h1>
+
+        <p id="heroDescription">
+          Saksikan film dan series favorit kamu.
+        </p>
+
+        <div class="hero-buttons">
+
+          <button
+            type="button"
+            class="btn btn-red"
+            id="heroPlayBtn"
+          >
+            ▶ Mulai Nonton
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-dark"
+            id="heroInfoBtn"
+          >
+            ℹ Detail
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <section class="content-section">
+
+      <div class="container">
+
+        <!-- FILTER -->
+
+        <div class="filter-bar">
+
+          <button
+            class="filter-btn active"
+            data-filter="all"
+          >
+            Semua
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="movie"
+          >
+            Film
+          </button>
+
+          <button
+            class="filter-btn"
+            data-filter="series"
+          >
+            Series
+          </button>
+
+        </div>
+
+
+        <!-- FILM -->
+
+        <section class="catalog-section">
+
+          <div class="section-title">
+            <h2>Film</h2>
+          </div>
+
+          <div
+            id="movieGrid"
+            class="video-grid"
+          ></div>
+
+        </section>
+
+
+        <!-- SERIES -->
+
+        <section class="catalog-section">
+
+          <div class="section-title">
+            <h2>Series</h2>
+          </div>
+
+          <div
+            id="seriesGrid"
+            class="video-grid"
+          ></div>
+
+        </section>
+
+
+        <!-- EMPTY -->
+
+        <div
+          id="emptyState"
+          class="empty-state hidden"
+        >
+          <div class="empty-icon">
+            ×
+          </div>
+
+          <h3>
+            Film tidak ditemukan
+          </h3>
+
+          <p>
+            Coba gunakan kata kunci pencarian yang berbeda.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
 
   </main>
 
 
-  <script>
+  <!-- ================= DETAIL MODAL ================= -->
 
-    /* =========================
-       DAFTAR PERTANDINGAN
-       ========================= */
+  <div
+    id="detailModal"
+    class="modal hidden"
+    aria-hidden="true"
+  >
 
-    const matches = {
+    <div class="modal-backdrop"></div>
 
-      "desah": {
-        title: "bokep indo viral",
-        src: "https://aceimg.com/upload/?f=2mEaEuQg4.mp4"
-      },
+    <div class="modal-box detail-box">
 
-      "cindo": {
-        title: "cindo",
-        src: "https://aceimg.com/upload/?f=2mEaEuQg4.mp4"
-      },
+      <button
+        type="button"
+        class="modal-close"
+        data-close="detailModal"
+        aria-label="Tutup"
+      >
+        ×
+      </button>
 
-      "proplayer1": {
-        title: "Barcelona vs Vallecano",
-        src: "tribunvideo.com/f/ccyvim9v0u7"
-      },
+      <div class="detail-video-wrapper">
 
-      "priplayer3": {
-        title: "Aston Villa vs Arsenal",
-        src: "tribunvideo.com/f/5quuw0w8as8"
-      },
+        <video
+          id="detailVideo"
+          controls
+          playsinline
+          preload="metadata"
+        ></video>
 
-      "tembem": {
-        title: "Real Madrid vs Malaga",
-        src: "https://autumn-field-e635.andinirosalin3.workers.dev"
-      },
+      </div>
 
-      "napoli": {
-        title: "Napoli vs Como",
-        src: "https://starballtv010.blogspot.com/2026/08/naco.html"
-      },
+      <div class="detail-content">
 
-      "deportivo": {
-        title: "Deportivo vs Valencia",
-        src: "https://starballtv010.blogspot.com/2026/08/lava.html"
-      },
+        <span
+          id="detailType"
+          class="badge"
+        >
+          FILM
+        </span>
 
-      "alqadsiah": {
-        title: "Al Qadsiah vs Al Faisaly",
-        src: "https://starballtv010.blogspot.com/2026/08/qafa.html"
-      },
+        <h2 id="detailTitle">
+          Judul
+        </h2>
 
-      "intermilan": {
-        title: "Cagliari vs Inter Milan",
-        src: "https://starballtv010.blogspot.com/2026/08/cain.html"
-      },
+        <div class="detail-meta">
 
-      "gogo": {
-        title: "Lazio vs Genoa",
-        src: "https://sabutv.com/server/event.m3u8?ch=12&proxy=1"
-      },
+          <span id="detailYear">
+            2026
+          </span>
 
-      "viral": {
-        title: "AS Monaco vs Marseille",
-        src: "https://aceimg.com/upload/?f=v5yPsxHaU.mp4"
-      },
+          <span>•</span>
 
-      "mentok": {
-        title: "MotoGP",
-        src: "https://aceimg.com/upload/?f=3i5f3YUWh.mp4"
-      },
+          <span id="detailGenre">
+            Action
+          </span>
 
-      "sp": {
-        title: "Celta vs Athletic Bilbao",
-        src: "https://aceimg.com/upload/?f=jQ4piDo7n.mp4"
-      }
+          <span>•</span>
 
-    };
+          <span id="detailRating">
+            ★ 8.0
+          </span>
 
+        </div>
 
-    /* =========================
-       AMBIL ?id=
-       ========================= */
+        <p id="detailDescription">
+          Deskripsi film.
+        </p>
 
-    const params =
-      new URLSearchParams(window.location.search);
+        <p class="cast">
+          <strong>Pemeran:</strong>
+          <span id="detailCast">
+            -
+          </span>
+        </p>
 
-    const matchId =
-      (params.get("id") || "")
-        .trim()
-        .toLowerCase();
+        <button
+          type="button"
+          id="detailPlayBtn"
+          class="btn btn-red"
+        >
+          ▶ Tonton Sekarang
+        </button>
 
+      </div>
 
-    /* =========================
-       FALLBACK
-       ========================= */
+    </div>
 
-    const fallbackMatch = {
-      title: "Live Stream",
-      src: "about:blank"
-    };
+  </div>
 
 
-    /* =========================
-       PILIH STREAM
-       ========================= */
+  <!-- ================= FULL PLAYER ================= -->
 
-    const activeMatch =
-      matches[matchId] || fallbackMatch;
+  <div
+    id="playerModal"
+    class="player-modal hidden"
+    aria-hidden="true"
+  >
 
+    <button
+      type="button"
+      class="player-close"
+      data-close="playerModal"
+      aria-label="Tutup player"
+    >
+      ×
+    </button>
 
-    /* =========================
-       LOAD IFRAME
-       ========================= */
+    <div class="player-container">
 
-    const iframe =
-      document.getElementById("video-iframe");
+      <video
+        id="mainPlayer"
+        class="main-player"
+        controls
+        playsinline
+        preload="metadata"
+      ></video>
 
-    iframe.src = activeMatch.src;
+      <div
+        id="playerError"
+        class="player-error hidden"
+      >
+        Video tidak dapat diputar.
+      </div>
 
+    </div>
 
-    /* =========================
-       JUDUL
-       ========================= */
-
-    document.title =
-      "Sports77HD - " + activeMatch.title;
-
-    document.getElementById("page-title")
-      .textContent =
-      "Sports77HD - " + activeMatch.title;
-
-
-    /* =========================
-       IKLAN SHOPEE
-       ========================= */
-
-    const overlay =
-      document.getElementById("ad-overlay");
-
-    const SHOPEE_URL =
-      "https://s.shopee.co.id/2gAtB1h0zd";
+  </div>
 
 
-    let adOpened = false;
+  <!-- ================= FOOTER ================= -->
+
+  <footer class="footer">
+
+    <div class="container footer-inner">
+
+      <div class="footer-logo">
+        <span>RED</span>FLIX
+      </div>
+
+      <p>
+        © 2026 RedFlix. Semua hak dilindungi.
+      </p>
+
+    </div>
+
+  </footer>
 
 
-    overlay.addEventListener(
-      "click",
-      function () {
-
-        if (adOpened) {
-          return;
-        }
-
-        adOpened = true;
-
-        /*
-          Buka iklan dari aksi klik user.
-        */
-        window.open(
-          SHOPEE_URL,
-          "_blank",
-          "noopener,noreferrer"
-        );
-
-        /*
-          Lepaskan overlay setelah
-          klik pertama.
-        */
-        overlay.classList.add("hidden");
-
-      },
-      {
-        once: true
-      }
-    );
-
-  </script>
+  <script src="movies.js"></script>
+  <script src="script.js"></script>
 
 </body>
 </html>
