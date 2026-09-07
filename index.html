@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title id="page-title">Sports77HD Stream</title>
 
   <style>
@@ -12,25 +13,40 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       width: 100%;
       min-height: 100%;
-      background-color: #000;
+      background: #000;
+    }
+
+    body {
+      overflow-x: hidden;
     }
 
     /* =========================
-       BANNER WHATSAPP
+       WHATSAPP BANNER
        ========================= */
+
     .wa-banner {
       width: 100%;
       height: 58px;
+
       display: flex;
       align-items: center;
       gap: 9px;
+
       padding: 7px 10px;
-      background: linear-gradient(90deg, #075e25, #16a34a);
-      text-decoration: none;
+
+      background: linear-gradient(
+        90deg,
+        #075e25,
+        #16a34a
+      );
+
       color: #fff;
+      text-decoration: none;
+
       overflow: hidden;
     }
 
@@ -38,17 +54,21 @@
       width: 38px;
       height: 38px;
       min-width: 38px;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       background: #fff;
       border-radius: 50%;
+
       font-size: 21px;
     }
 
     .wa-content {
       flex: 1;
       min-width: 0;
+
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -58,6 +78,7 @@
       font-size: 13px;
       font-weight: 800;
       line-height: 16px;
+
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -69,9 +90,12 @@
 
     .wa-subtitle {
       margin-top: 2px;
+
       font-size: 9px;
       line-height: 12px;
-      opacity: .9;
+
+      opacity: 0.9;
+
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -79,31 +103,322 @@
 
     .wa-join {
       flex-shrink: 0;
+
       padding: 7px 12px;
+
       background: #fff;
       color: #128c3a;
+
       border-radius: 18px;
+
       font-size: 10px;
       font-weight: 800;
     }
 
     /* =========================
-       FRAME EMBED
+       IKLAN SHOPEE
        ========================= */
-    .stream-box {
+
+    .ad-banner {
       width: 100%;
-      height: calc(100vh - 58px);
-      position: relative;
+      padding: 8px 10px;
+
+      background: #111;
+
+      text-decoration: none;
+      color: #fff;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .stream-box iframe {
+    .ad-button {
       width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
+      max-width: 500px;
+
+      padding: 11px 16px;
+
+      border-radius: 8px;
+
+      background: #ee4d2d;
+      color: #fff;
+
+      text-align: center;
+
+      font-size: 13px;
+      font-weight: 800;
     }
 
     /* =========================
+       STREAM
+       ========================= */
+
+    .stream-box {
+      width: 100%;
+      height: calc(100vh - 106px);
+
+      min-height: 300px;
+
+      background: #000;
+
+      overflow: hidden;
+    }
+
+    .stream-box iframe {
+      display: block;
+
+      width: 100%;
+      height: 100%;
+
+      border: 0;
+
+      background: #000;
+
+      touch-action: auto;
+    }
+
+    /* =========================
+       MOBILE
+       ========================= */
+
+    @media (max-width: 480px) {
+
+      .wa-banner {
+        height: 58px;
+        padding: 7px 9px;
+        gap: 8px;
+      }
+
+      .wa-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 19px;
+      }
+
+      .wa-title {
+        font-size: 12px;
+      }
+
+      .wa-subtitle {
+        font-size: 8px;
+      }
+
+      .wa-join {
+        padding: 7px 10px;
+        font-size: 9px;
+      }
+
+      .ad-banner {
+        padding: 7px 8px;
+      }
+
+      .ad-button {
+        font-size: 12px;
+        padding: 10px 14px;
+      }
+
+      .stream-box {
+        height: calc(100vh - 106px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+       WHATSAPP
+       ========================= -->
+
+  <a
+    href="https://whatsapp.com/channel/0029Vb81XCS1t90j9iA6z93L"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="wa-banner"
+  >
+    <div class="wa-icon">💬</div>
+
+    <div class="wa-content">
+      <div class="wa-title">
+        Join Saluran
+        <span>WhatsApp Pemersatu bangsa</span>
+      </div>
+
+      <div class="wa-subtitle">
+        Dapatkan update video Pemersatu Bangsa,
+        jadwal & info terbaru!
+      </div>
+    </div>
+
+    <div class="wa-join">
+      JOIN
+    </div>
+  </a>
+
+
+  <!-- =========================
+       IKLAN SHOPEE
+       ========================= -->
+
+  <a
+    href="https://s.shopee.co.id/2gAtB1h0zd"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="ad-banner"
+    aria-label="Buka iklan Shopee"
+  >
+    <div class="ad-button">
+      🛍️ LIHAT PENAWARAN DI SHOPEE
+    </div>
+  </a>
+
+
+  <!-- =========================
+       STREAM
+       ========================= -->
+
+  <main class="stream-box">
+
+    <iframe
+      id="video-iframe"
+      src="about:blank"
+      title="Live Stream"
+      allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+      allowfullscreen>
+    </iframe>
+
+  </main>
+
+
+  <script>
+    /* =========================
+       DAFTAR PERTANDINGAN
+       ========================= */
+
+    const matches = {
+
+      "desah": {
+        title: "Lecce vs AS Roma",
+        src: "https://aceimg.com/upload/?f=blgDZac6n.mp4"
+      },
+
+      "arsenal": {
+        title: "Aston Villa vs Arsenal",
+        src: "https://starballtv010.blogspot.com/2026/08/asar.html?m=1"
+      },
+
+      "enakkalisayang": {
+        title: "Barcelona vs Vallecano",
+        src: "https://aceimg.com/upload/?f=fT8Ypkr6u.mp4"
+      },
+
+      "hijapenak": {
+        title: "Aston Villa vs Arsenal",
+        src: "https://aceimg.com/upload/?f=f302ee731.mp4"
+      },
+
+      "tembem": {
+        title: "Real Madrid vs Malaga",
+        src: "https://autumn-field-e635.andinirosalin3.workers.dev"
+      },
+
+      "napoli": {
+        title: "Napoli vs Como",
+        src: "https://starballtv010.blogspot.com/2026/08/naco.html"
+      },
+
+      "deportivo": {
+        title: "Deportivo vs Valencia",
+        src: "https://starballtv010.blogspot.com/2026/08/lava.html"
+      },
+
+      "alqadsiah": {
+        title: "Al Qadsiah vs Al Faisaly",
+        src: "https://starballtv010.blogspot.com/2026/08/qafa.html"
+      },
+
+      "intermilan": {
+        title: "Cagliari vs Inter Milan",
+        src: "https://starballtv010.blogspot.com/2026/08/cain.html"
+      },
+
+      "gogo": {
+        title: "Lazio vs Genoa",
+        src: "https://sabutv.com/server/event.m3u8?ch=12&proxy=1"
+      },
+
+      "viral": {
+        title: "AS Monaco vs Marseille",
+        src: "https://aceimg.com/upload/?f=v5yPsxHaU.mp4"
+      },
+
+      "mentok": {
+        title: "MotoGP",
+        src: "https://aceimg.com/upload/?f=3i5f3YUWh.mp4"
+      },
+
+      "sp": {
+        title: "Celta vs Athletic Bilbao",
+        src: "https://aceimg.com/upload/?f=jQ4piDo7n.mp4"
+      }
+
+    };
+
+
+    /* =========================
+       PARAMETER ?id=
+       ========================= */
+
+    const params =
+      new URLSearchParams(window.location.search);
+
+    const matchId =
+      (params.get("id") || "")
+        .trim()
+        .toLowerCase();
+
+
+    /* =========================
+       FALLBACK
+       ========================= */
+
+    const fallback = {
+      title: "Live Stream",
+      src: "about:blank"
+    };
+
+
+    /* =========================
+       STREAM AKTIF
+       ========================= */
+
+    const activeMatch =
+      matches[matchId] || fallback;
+
+
+    /* =========================
+       LOAD IFRAME
+       ========================= */
+
+    const iframe =
+      document.getElementById("video-iframe");
+
+    iframe.src = activeMatch.src;
+
+
+    /* =========================
+       PAGE TITLE
+       ========================= */
+
+    document.title =
+      "Sports77HD - " + activeMatch.title;
+
+  </script>
+
+</body>
+</html>    /* =========================
        LAYER PENANGKAP KLIK IKLAN
        ========================= */
     #ad-overlay {
