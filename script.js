@@ -8,7 +8,24 @@
 ========================================================= */
 
 const SHOPEE_AD_URL =
-  "https://s.shopee.co.id/4qFQYYdc3C";
+  "https://s.shopee.co.id/2gAtB1h0zd";
+
+
+/* =========================================================
+   DATA MOVIE
+========================================================= */
+
+const movies =
+  Array.isArray(window.movies)
+    ? window.movies
+    : [];
+
+
+if (!movies.length) {
+  console.error(
+    "Data film tidak ditemukan. Pastikan movie.js dimuat sebelum script.js."
+  );
+}
 
 
 /* =========================================================
@@ -64,7 +81,55 @@ const playerError =
 
 let currentMovie = null;
 
-let currentHls = null;
+const hlsInstances =
+  new Map();
+
+let adOpenedForCurrentPlay =
+  false;
+
+
+/* =========================================================
+   OPEN IKLAN SHOPEE
+========================================================= */
+
+function openShopeeAd() {
+
+  try {
+
+    const popup =
+      window.open(
+        SHOPEE_AD_URL,
+        "_blank"
+      );
+
+    if (!popup) {
+
+      console.warn(
+        "Popup Shopee diblokir oleh browser."
+      );
+
+      return false;
+
+    }
+
+    try {
+      popup.opener = null;
+    } catch (error) {}
+
+    return true;
+
+  } catch (error) {
+
+    console.error(
+      "Gagal membuka iklan Shopee:",
+      error
+    );
+
+    return false;
+
+  }
+
+}
 
 
 /* =========================================================
@@ -78,13 +143,45 @@ function loadVideo(
 ) {
 
   if (!videoElement || !url) {
+
+    console.warn(
+      "Video element atau URL video kosong."
+    );
+
     return;
+
+  }
+
+
+  /*
+    Hancurkan HLS sebelumnya
+  */
+
+  if (
+    hlsInstances.has(videoElement)
+  ) {
+
+    const oldHls =
+      hlsInstances.get(
+        videoElement
+      );
+
+    try {
+      oldHls.destroy();
+    } catch (error) {}
+
+    hlsInstances.delete(
+      videoElement
+    );
+
   }
 
 
   videoElement.pause();
 
-  videoElement.removeAttribute("src");
+  videoElement.removeAttribute(
+    "src"
+  );
 
   videoElement.load();
 
@@ -93,19 +190,31 @@ function loadVideo(
     MP4 / WebM
   */
 
-  if (!url.includes(".m3u8")) {
+  if (
+    !url.includes(".m3u8")
+  ) {
 
-    videoElement.src = url;
+    videoElement.src =
+      url;
+
 
     if (autoplay) {
 
       videoElement
         .play()
-        .catch(() => {});
+        .catch(error => {
+
+          console.warn(
+            "Autoplay gagal:",
+            error
+          );
+
+        });
 
     }
 
     return;
+
   }
 
 
@@ -119,17 +228,27 @@ function loadVideo(
     )
   ) {
 
-    videoElement.src = url;
+    videoElement.src =
+      url;
+
 
     if (autoplay) {
 
       videoElement
         .play()
-        .catch(() => {});
+        .catch(error => {
+
+          console.warn(
+            "Autoplay HLS gagal:",
+            error
+          );
+
+        });
 
     }
 
     return;
+
   }
 
 
@@ -142,25 +261,30 @@ function loadVideo(
     Hls.isSupported()
   ) {
 
-    if (currentHls) {
-
-      currentHls.destroy();
-
-      currentHls = null;
-
-    }
+    const hls =
+      new Hls({
+        enableWorker: true,
+        lowLatencyMode: false
+      });
 
 
-    currentHls = new Hls();
+    hlsInstances.set(
+      videoElement,
+      hls
+    );
 
-    currentHls.loadSource(url);
 
-    currentHls.attachMedia(
+    hls.loadSource(
+      url
+    );
+
+
+    hls.attachMedia(
       videoElement
     );
 
 
-    currentHls.on(
+    hls.on(
       Hls.Events.MANIFEST_PARSED,
       () => {
 
@@ -168,7 +292,14 @@ function loadVideo(
 
           videoElement
             .play()
-            .catch(() => {});
+            .catch(error => {
+
+              console.warn(
+                "Autoplay HLS.js gagal:",
+                error
+              );
+
+            });
 
         }
 
@@ -176,7 +307,7 @@ function loadVideo(
     );
 
 
-    currentHls.on(
+    hls.on(
       Hls.Events.ERROR,
       (event, data) => {
 
@@ -185,8 +316,22 @@ function loadVideo(
           data
         );
 
+
+        if (data.fatal) {
+
+          try {
+            hls.destroy();
+          } catch (error) {}
+
+          hlsInstances.delete(
+            videoElement
+          );
+
+        }
+
       }
     );
+
 
   } else {
 
@@ -200,16 +345,68 @@ function loadVideo(
 
 
 /* =========================================================
+   DESTROY VIDEO
+========================================================= */
+
+function destroyVideo(
+  videoElement
+) {
+
+  if (!videoElement) {
+    return;
+  }
+
+
+  if (
+    hlsInstances.has(
+      videoElement
+    )
+  ) {
+
+    const hls =
+      hlsInstances.get(
+        videoElement
+      );
+
+    try {
+      hls.destroy();
+    } catch (error) {}
+
+    hlsInstances.delete(
+      videoElement
+    );
+
+  }
+
+
+  videoElement.pause();
+
+  videoElement.removeAttribute(
+    "src"
+  );
+
+  videoElement.load();
+
+}
+
+
+/* =========================================================
    CREATE CARD
 ========================================================= */
 
-function createCard(movie) {
+function createCard(
+  movie
+) {
 
   const card =
-    document.createElement("article");
+    document.createElement(
+      "article"
+    );
+
 
   card.className =
     "video-card";
+
 
   card.dataset.id =
     movie.id;
@@ -264,7 +461,9 @@ function createCard(movie) {
 
 
   const video =
-    card.querySelector("video");
+    card.querySelector(
+      "video"
+    );
 
 
   loadVideo(
@@ -274,14 +473,16 @@ function createCard(movie) {
 
 
   /*
-    Preview saat mouse masuk
+    Preview desktop
   */
 
   card.addEventListener(
     "mouseenter",
     () => {
 
-      video.currentTime = 0;
+      try {
+        video.currentTime = 0;
+      } catch (error) {}
 
       video
         .play()
@@ -292,7 +493,7 @@ function createCard(movie) {
 
 
   /*
-    Stop preview saat mouse keluar
+    Stop preview
   */
 
   card.addEventListener(
@@ -310,32 +511,44 @@ function createCard(movie) {
 
 
   /*
-    Buka detail saat card diklik
+    Card diklik = Detail
   */
 
   card.addEventListener(
     "click",
     () => {
 
-      openDetail(movie);
+      openDetail(
+        movie
+      );
 
     }
   );
 
 
   return card;
+
 }
 
 
 /* =========================================================
-   RENDER
+   RENDER MOVIES
 ========================================================= */
 
-function renderMovies(list) {
+function renderMovies(
+  list
+) {
 
-  movieGrid.innerHTML = "";
+  if (!movieGrid || !seriesGrid) {
+    return;
+  }
 
-  seriesGrid.innerHTML = "";
+
+  movieGrid.innerHTML =
+    "";
+
+  seriesGrid.innerHTML =
+    "";
 
 
   const moviesOnly =
@@ -352,22 +565,34 @@ function renderMovies(list) {
     );
 
 
-  moviesOnly.forEach(movie => {
+  /*
+    FILM
+  */
 
-    movieGrid.appendChild(
-      createCard(movie)
-    );
+  moviesOnly.forEach(
+    movie => {
 
-  });
+      movieGrid.appendChild(
+        createCard(movie)
+      );
+
+    }
+  );
 
 
-  seriesOnly.forEach(series => {
+  /*
+    SERIES
+  */
 
-    seriesGrid.appendChild(
-      createCard(series)
-    );
+  seriesOnly.forEach(
+    series => {
 
-  });
+      seriesGrid.appendChild(
+        createCard(series)
+      );
+
+    }
+  );
 
 
   const hasResult =
@@ -375,30 +600,45 @@ function renderMovies(list) {
     seriesOnly.length > 0;
 
 
-  emptyState.classList.toggle(
-    "hidden",
-    hasResult
-  );
+  if (emptyState) {
 
+    emptyState.classList.toggle(
+      "hidden",
+      hasResult
+    );
+
+  }
+
+
+  /*
+    Sembunyikan section kosong
+  */
 
   document
     .querySelectorAll(
       ".catalog-section"
     )
-    .forEach(section => {
+    .forEach(
+      section => {
 
-      const grid =
-        section.querySelector(
-          ".video-grid"
+        const grid =
+          section.querySelector(
+            ".video-grid"
+          );
+
+
+        if (!grid) {
+          return;
+        }
+
+
+        section.classList.toggle(
+          "hidden",
+          grid.children.length === 0
         );
 
-
-      section.classList.toggle(
-        "hidden",
-        grid.children.length === 0
-      );
-
-    });
+      }
+    );
 
 }
 
@@ -408,6 +648,11 @@ function renderMovies(list) {
 ========================================================= */
 
 function setupHero() {
+
+  if (!movies.length) {
+    return;
+  }
+
 
   const featured =
     movies.find(
@@ -425,39 +670,67 @@ function setupHero() {
     featured;
 
 
-  heroTitle.textContent =
-    featured.title;
+  if (heroTitle) {
+
+    heroTitle.textContent =
+      featured.title;
+
+  }
 
 
-  heroDescription.textContent =
-    featured.description;
+  if (heroDescription) {
+
+    heroDescription.textContent =
+      featured.description || "";
+
+  }
 
 
-  loadVideo(
-    heroVideo,
-    featured.video,
-    true
-  );
+  if (heroVideo) {
+
+    loadVideo(
+      heroVideo,
+      featured.video,
+      true
+    );
+
+  }
 
 
-  heroPlayBtn.onclick =
-    () => {
+  /*
+    Tombol Hero Play
+  */
 
-      openPlayer(
-        featured
-      );
+  if (heroPlayBtn) {
 
-    };
+    heroPlayBtn.onclick =
+      () => {
+
+        openPlayer(
+          featured
+        );
+
+      };
+
+  }
 
 
-  heroInfoBtn.onclick =
-    () => {
+  /*
+    Tombol Hero Info
+  */
 
-      openDetail(
-        featured
-      );
+  if (heroInfoBtn) {
 
-    };
+    heroInfoBtn.onclick =
+      () => {
+
+        openDetail(
+          featured
+        );
+
+      };
+
+  }
 
 }
 
@@ -466,71 +739,137 @@ function setupHero() {
    DETAIL
 ========================================================= */
 
-function openDetail(movie) {
+function openDetail(
+  movie
+) {
+
+  if (!movie) {
+    return;
+  }
+
 
   currentMovie =
     movie;
 
 
-  document.getElementById(
-    "detailTitle"
-  ).textContent =
-    movie.title;
+  const detailTitle =
+    document.getElementById(
+      "detailTitle"
+    );
+
+  const detailYear =
+    document.getElementById(
+      "detailYear"
+    );
+
+  const detailGenre =
+    document.getElementById(
+      "detailGenre"
+    );
+
+  const detailRating =
+    document.getElementById(
+      "detailRating"
+    );
+
+  const detailType =
+    document.getElementById(
+      "detailType"
+    );
+
+  const detailDescription =
+    document.getElementById(
+      "detailDescription"
+    );
+
+  const detailCast =
+    document.getElementById(
+      "detailCast"
+    );
 
 
-  document.getElementById(
-    "detailYear"
-  ).textContent =
-    movie.year;
+  if (detailTitle) {
+
+    detailTitle.textContent =
+      movie.title;
+
+  }
 
 
-  document.getElementById(
-    "detailGenre"
-  ).textContent =
-    movie.genre;
+  if (detailYear) {
+
+    detailYear.textContent =
+      movie.year;
+
+  }
 
 
-  document.getElementById(
-    "detailRating"
-  ).textContent =
-    `★ ${movie.rating}`;
+  if (detailGenre) {
+
+    detailGenre.textContent =
+      movie.genre;
+
+  }
 
 
-  document.getElementById(
-    "detailType"
-  ).textContent =
-    movie.type === "series"
-      ? "SERIES"
-      : "FILM";
+  if (detailRating) {
+
+    detailRating.textContent =
+      `★ ${movie.rating}`;
+
+  }
 
 
-  document.getElementById(
-    "detailDescription"
-  ).textContent =
-    movie.description;
+  if (detailType) {
+
+    detailType.textContent =
+      movie.type === "series"
+        ? "SERIES"
+        : "FILM";
+
+  }
 
 
-  document.getElementById(
-    "detailCast"
-  ).textContent =
-    movie.cast || "-";
+  if (detailDescription) {
+
+    detailDescription.textContent =
+      movie.description || "";
+
+  }
 
 
-  loadVideo(
-    detailVideo,
-    movie.video
-  );
+  if (detailCast) {
+
+    detailCast.textContent =
+      movie.cast || "-";
+
+  }
 
 
-  detailModal.classList.remove(
-    "hidden"
-  );
+  if (detailVideo) {
+
+    loadVideo(
+      detailVideo,
+      movie.video,
+      false
+    );
+
+  }
 
 
-  detailModal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
+  if (detailModal) {
+
+    detailModal.classList.remove(
+      "hidden"
+    );
+
+
+    detailModal.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+  }
 
 
   document.body.style.overflow =
@@ -543,64 +882,146 @@ function openDetail(movie) {
    OPEN PLAYER + IKLAN
 ========================================================= */
 
-function openPlayer(movie) {
+function openPlayer(
+  movie
+) {
+
+  if (!movie) {
+    return;
+  }
+
 
   currentMovie =
     movie;
 
 
   /*
-    Buka link Shopee ketika
-    user menekan tombol Play.
-
-    Browser dapat membuka halaman
-    Shopee atau mengarahkannya ke
-    aplikasi Shopee jika perangkat
-    mendukung deep link tersebut.
+    Reset status iklan
   */
 
-  try {
+  adOpenedForCurrentPlay =
+    false;
 
-    window.open(
-      SHOPEE_AD_URL,
-      "_blank",
-      "noopener,noreferrer"
-    );
 
-  } catch (error) {
+  /*
+    Buka Shopee LANGSUNG
+    dari klik user.
+  */
 
-    console.error(
-      "Gagal membuka iklan:",
-      error
+  const adOpened =
+    openShopeeAd();
+
+
+  console.log(
+    "Shopee popup:",
+    adOpened
+      ? "berhasil dibuka"
+      : "diblokir browser"
+  );
+
+
+  /*
+    Tutup detail
+  */
+
+  if (
+    detailModal &&
+    !detailModal.classList.contains(
+      "hidden"
+    )
+  ) {
+
+    closeModal(
+      detailModal
     );
 
   }
 
 
-  playerError.classList.add(
-    "hidden"
-  );
+  /*
+    Reset error
+  */
+
+  if (playerError) {
+
+    playerError.classList.add(
+      "hidden"
+    );
+
+  }
 
 
-  playerModal.classList.remove(
-    "hidden"
-  );
+  /*
+    Buka player
+  */
+
+  if (playerModal) {
+
+    playerModal.classList.remove(
+      "hidden"
+    );
 
 
-  playerModal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
+    playerModal.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+  }
 
 
   document.body.style.overflow =
     "hidden";
 
 
-  loadVideo(
-    mainPlayer,
-    movie.video,
-    true
+  /*
+    Load video
+  */
+
+  if (mainPlayer) {
+
+    loadVideo(
+      mainPlayer,
+      movie.video,
+      true
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   KLIK VIDEO PLAYER
+========================================================= */
+
+if (mainPlayer) {
+
+  mainPlayer.addEventListener(
+    "click",
+    () => {
+
+      /*
+        Hanya buka iklan sekali
+        untuk sesi player ini.
+      */
+
+      if (
+        adOpenedForCurrentPlay
+      ) {
+
+        return;
+
+      }
+
+
+      adOpenedForCurrentPlay =
+        true;
+
+
+      openShopeeAd();
+
+    }
   );
 
 }
@@ -610,7 +1031,9 @@ function openPlayer(movie) {
    CLOSE MODAL
 ========================================================= */
 
-function closeModal(modal) {
+function closeModal(
+  modal
+) {
 
   if (!modal) {
     return;
@@ -623,17 +1046,15 @@ function closeModal(modal) {
     );
 
 
-  videos.forEach(video => {
+  videos.forEach(
+    video => {
 
-    video.pause();
+      destroyVideo(
+        video
+      );
 
-    video.removeAttribute(
-      "src"
-    );
-
-    video.load();
-
-  });
+    }
+  );
 
 
   modal.classList.add(
@@ -648,18 +1069,18 @@ function closeModal(modal) {
 
 
   if (
-    modal === playerModal &&
-    currentHls
+    modal === playerModal
   ) {
 
-    currentHls.destroy();
-
-    currentHls = null;
+    adOpenedForCurrentPlay =
+      false;
 
   }
 
 
   if (
+    detailModal &&
+    playerModal &&
     detailModal.classList.contains(
       "hidden"
     ) &&
@@ -684,35 +1105,47 @@ document
   .querySelectorAll(
     "[data-close]"
   )
-  .forEach(button => {
+  .forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-        const id =
-          button.dataset.close;
+          const id =
+            button.dataset.close;
 
 
-        closeModal(
-          document.getElementById(id)
-        );
+          const modal =
+            document.getElementById(
+              id
+            );
 
-      }
-    );
 
-  });
+          closeModal(
+            modal
+          );
+
+        }
+      );
+
+    }
+  );
 
 
 /* =========================================================
    DETAIL PLAY
 ========================================================= */
 
-document
-  .getElementById(
+const detailPlayBtn =
+  document.getElementById(
     "detailPlayBtn"
-  )
-  .addEventListener(
+  );
+
+
+if (detailPlayBtn) {
+
+  detailPlayBtn.addEventListener(
     "click",
     () => {
 
@@ -721,44 +1154,49 @@ document
       }
 
 
-      closeModal(
-        detailModal
-      );
+      /*
+        Tidak menggunakan setTimeout.
+        Popup dipanggil langsung dari klik.
+      */
 
-
-      setTimeout(
-        () => {
-
-          openPlayer(
-            currentMovie
-          );
-
-        },
-        100
+      openPlayer(
+        currentMovie
       );
 
     }
   );
+
+}
 
 
 /* =========================================================
    BACKDROP
 ========================================================= */
 
-detailModal
-  .querySelector(
-    ".modal-backdrop"
-  )
-  .addEventListener(
-    "click",
-    () => {
+if (detailModal) {
 
-      closeModal(
-        detailModal
-      );
+  const backdrop =
+    detailModal.querySelector(
+      ".modal-backdrop"
+    );
 
-    }
-  );
+
+  if (backdrop) {
+
+    backdrop.addEventListener(
+      "click",
+      () => {
+
+        closeModal(
+          detailModal
+        );
+
+      }
+    );
+
+  }
+
+}
 
 
 /* =========================================================
@@ -772,11 +1210,14 @@ document.addEventListener(
     if (
       event.key !== "Escape"
     ) {
+
       return;
+
     }
 
 
     if (
+      playerModal &&
       !playerModal.classList.contains(
         "hidden"
       )
@@ -787,10 +1228,12 @@ document.addEventListener(
       );
 
       return;
+
     }
 
 
     if (
+      detailModal &&
       !detailModal.classList.contains(
         "hidden"
       )
@@ -810,49 +1253,65 @@ document.addEventListener(
    SEARCH
 ========================================================= */
 
-searchInput.addEventListener(
-  "input",
-  event => {
+if (searchInput) {
 
-    const keyword =
-      event.target.value
-        .trim()
-        .toLowerCase();
+  searchInput.addEventListener(
+    "input",
+    event => {
+
+      const keyword =
+        event.target.value
+          .trim()
+          .toLowerCase();
 
 
-    const filtered =
-      movies.filter(
-        movie => {
+      const filtered =
+        movies.filter(
+          movie => {
 
-          return (
+            return (
 
-            movie.title
+              String(
+                movie.title || ""
+              )
               .toLowerCase()
-              .includes(keyword)
+              .includes(
+                keyword
+              )
 
-            ||
+              ||
 
-            movie.genre
+              String(
+                movie.genre || ""
+              )
               .toLowerCase()
-              .includes(keyword)
+              .includes(
+                keyword
+              )
 
-            ||
+              ||
 
-            String(movie.year)
-              .includes(keyword)
+              String(
+                movie.year || ""
+              )
+              .includes(
+                keyword
+              )
 
-          );
+            );
 
-        }
+          }
+        );
+
+
+      renderMovies(
+        filtered
       );
 
+    }
+  );
 
-    renderMovies(
-      filtered
-    );
-
-  }
-);
+}
 
 
 /* =========================================================
@@ -863,67 +1322,75 @@ document
   .querySelectorAll(
     ".filter-btn"
   )
-  .forEach(button => {
+  .forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-        document
-          .querySelectorAll(
-            ".filter-btn"
-          )
-          .forEach(btn => {
+          document
+            .querySelectorAll(
+              ".filter-btn"
+            )
+            .forEach(
+              btn => {
 
-            btn.classList.remove(
-              "active"
+                btn.classList.remove(
+                  "active"
+                );
+
+              }
             );
 
-          });
 
-
-        button.classList.add(
-          "active"
-        );
-
-
-        const filter =
-          button.dataset.filter;
-
-
-        if (
-          filter === "all"
-        ) {
-
-          renderMovies(
-            movies
+          button.classList.add(
+            "active"
           );
 
-          return;
+
+          const filter =
+            button.dataset.filter;
+
+
+          if (
+            filter === "all"
+          ) {
+
+            renderMovies(
+              movies
+            );
+
+            return;
+
+          }
+
+
+          renderMovies(
+            movies.filter(
+              movie =>
+                movie.type === filter
+            )
+          );
 
         }
+      );
 
-
-        renderMovies(
-          movies.filter(
-            movie =>
-              movie.type === filter
-          )
-        );
-
-      }
-    );
-
-  });
+    }
+  );
 
 
 /* =========================================================
    ESCAPE HTML
 ========================================================= */
 
-function escapeHTML(value) {
+function escapeHTML(
+  value
+) {
 
-  return String(value)
+  return String(
+    value ?? ""
+  )
 
     .replace(
       /&/g,
@@ -962,3 +1429,13 @@ renderMovies(
 );
 
 setupHero();
+
+
+console.log(
+  "RedFlix berhasil dimuat."
+);
+
+console.log(
+  "Jumlah film:",
+  movies.length
+);
