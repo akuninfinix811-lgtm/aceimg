@@ -2,7 +2,7 @@ const movies = [
 
   {
     id: 1,
-    title: "Contoh Film Action",
+    title: "kak anjeni pemain basket",
     year: 2026,
     genre: "Action",
     rating: "8.5",
@@ -16,7 +16,7 @@ const movies = [
       "Actor 1, Actor 2, Actor 3",
 
     video:
-      "https://files.catbox.moe/u9zlbe.mp4"
+      "https://stream.kingbokep.video/kolpri-kak-anjani-pemain-basket/playlist.m3u8"
   },
 
 
