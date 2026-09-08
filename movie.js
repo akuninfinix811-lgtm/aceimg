@@ -1,9 +1,9 @@
 const movies = [
   {
     id: 1,
-    title: "Contoh Film Action",
+    title: "Kolpri kak anjani pemain basket viral",
     year: 2026,
-    genre: "Action",
+    genre: "semi",
     rating: "8.5",
     type: "movie",
     featured: true,
@@ -12,7 +12,7 @@ const movies = [
     cast:
       "Actor 1, Actor 2, Actor 3",
     video:
-      "https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4"
+      "https://stream.kingbokep.video/kolpri-kak-anjani-pemain-basket/playlist.m3u8"
   },
 
   {
