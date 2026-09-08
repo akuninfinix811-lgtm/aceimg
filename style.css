@@ -1,31 +1,18 @@
-/* =========================================================
-   REDFLIX
-   BLACK + RED
-========================================================= */
-
 :root {
   --black: #000000;
-  --black-2: #050505;
-  --black-3: #0a0a0a;
+  --black2: #080808;
+  --card: #0b0b0b;
 
   --red: #e50914;
-  --red-light: #ff1722;
-  --red-dark: #b20710;
+  --red2: #ff1621;
 
   --white: #ffffff;
   --gray: #aaaaaa;
-  --gray-2: #777777;
+  --dark-gray: #666666;
 
-  --border: rgba(255, 255, 255, 0.08);
-  --red-border: rgba(229, 9, 20, 0.4);
-
-  --container: 1400px;
+  --border: rgba(255,255,255,.08);
+  --red-border: rgba(229,9,20,.4);
 }
-
-
-/* =========================================================
-   RESET
-========================================================= */
 
 * {
   margin: 0;
@@ -42,7 +29,6 @@ body {
   min-height: 100vh;
 
   background: #000;
-
   color: #fff;
 
   font-family:
@@ -55,20 +41,11 @@ body {
 
 button,
 input {
-  font: inherit;
+  font-family: inherit;
 }
 
 button {
   cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-video {
-  display: block;
 }
 
 .hidden {
@@ -76,23 +53,7 @@ video {
 }
 
 
-/* =========================================================
-   CONTAINER
-========================================================= */
-
-.container {
-  width: min(
-    calc(100% - 40px),
-    var(--container)
-  );
-
-  margin: 0 auto;
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
+/* ================= HEADER ================= */
 
 .header {
   position: fixed;
@@ -105,39 +66,37 @@ video {
 
   z-index: 1000;
 
-  background: rgba(0, 0, 0, 0.97);
+  background: rgba(0,0,0,.97);
 
   border-bottom:
     1px solid
-    rgba(229, 9, 20, 0.35);
+    var(--red-border);
 
   backdrop-filter: blur(10px);
 }
 
 .header-inner {
+  width: min(
+    calc(100% - 40px),
+    1400px
+  );
+
   height: 100%;
+
+  margin: auto;
 
   display: flex;
 
   align-items: center;
-
   justify-content: space-between;
 
   gap: 20px;
 }
 
-
-/* =========================================================
-   LOGO
-========================================================= */
-
 .logo {
-  flex-shrink: 0;
-
   color: #fff;
 
   font-size: 25px;
-
   font-weight: 900;
 
   letter-spacing: -1.5px;
@@ -148,13 +107,8 @@ video {
   color: var(--red);
 }
 
-
-/* =========================================================
-   SEARCH
-========================================================= */
-
 .search-wrapper {
-  width: 360px;
+  width: 300px;
 }
 
 .search-input {
@@ -169,15 +123,13 @@ video {
 
   border:
     1px solid
-    rgba(229, 9, 20, 0.45);
+    rgba(229,9,20,.45);
 
   border-radius: 8px;
 
   outline: none;
 
   font-size: 15px;
-
-  transition: 0.25s;
 }
 
 .search-input::placeholder {
@@ -189,13 +141,11 @@ video {
 
   box-shadow:
     0 0 15px
-    rgba(229, 9, 20, 0.18);
+    rgba(229,9,20,.15);
 }
 
 
-/* =========================================================
-   HERO
-========================================================= */
+/* ================= HERO ================= */
 
 .hero {
   position: relative;
@@ -213,18 +163,13 @@ video {
   background: #000;
 }
 
-
-/* HERO VIDEO */
-
 .hero-media {
   position: absolute;
 
   top: 70px;
   left: 0;
-
-  width: 100%;
-
-  height: 490px;
+  right: 0;
+  bottom: 0;
 
   background: #000;
 }
@@ -235,13 +180,10 @@ video {
 
   object-fit: cover;
 
-  opacity: 0.48;
+  opacity: .48;
 }
 
-
-/* HERO OVERLAY */
-
-.hero-overlay {
+.hero-gradient {
   position: absolute;
 
   inset: 0;
@@ -250,98 +192,90 @@ video {
     linear-gradient(
       to right,
       #000 0%,
-      rgba(0, 0, 0, 0.88) 30%,
-      rgba(0, 0, 0, 0.4) 75%,
+      rgba(0,0,0,.85) 35%,
+      rgba(0,0,0,.3) 75%,
       #000 100%
     ),
     linear-gradient(
       to top,
       #000 0%,
-      transparent 60%
+      transparent 65%
     );
 }
-
-
-/* HERO CONTENT */
 
 .hero-content {
   position: relative;
 
-  z-index: 5;
+  z-index: 2;
 
   width: min(
     calc(100% - 40px),
-    var(--container)
+    1400px
   );
 
   margin: 0 auto;
 
-  padding-bottom: 55px;
+  padding-bottom: 60px;
 }
 
-.hero-label {
+.featured-label {
   margin-bottom: 12px;
 
   color: var(--red);
 
   font-size: 14px;
+  font-weight: 800;
 
-  font-weight: 900;
-
-  letter-spacing: 2.5px;
+  letter-spacing: 3px;
 }
 
 .hero h1 {
-  max-width: 750px;
-
   margin-bottom: 14px;
 
-  color: #fff;
-
   font-size:
-    clamp(42px, 6vw, 76px);
+    clamp(42px, 7vw, 78px);
 
-  line-height: 0.98;
+  line-height: .95;
 
   font-weight: 900;
 }
 
 .hero p {
-  max-width: 600px;
+  max-width: 560px;
 
-  color: #c2c2c2;
+  color: #c4c4c4;
 
   font-size: 17px;
 
   line-height: 1.6;
 }
 
-
-/* =========================================================
-   HERO BUTTON
-========================================================= */
-
-.hero-buttons {
+.hero-actions {
   display: flex;
 
   gap: 10px;
 
-  margin-top: 23px;
+  margin-top: 24px;
 }
+
+
+/* ================= BUTTON ================= */
 
 .btn {
   min-height: 45px;
 
   padding: 0 20px;
 
-  border: 0;
+  border: none;
 
   border-radius: 7px;
 
-  font-weight: 800;
+  color: #fff;
 
-  transition:
-    0.2s ease;
+  font-size: 15px;
+  font-weight: 700;
+
+  transition: .2s;
 }
 
 .btn:hover {
@@ -349,31 +283,27 @@ video {
 }
 
 .btn-red {
-  color: #fff;
-
   background: var(--red);
 
   box-shadow:
     0 8px 25px
-    rgba(229, 9, 20, 0.2);
+    rgba(229,9,20,.22);
 }
 
 .btn-red:hover {
-  background: var(--red-light);
+  background: var(--red2);
 
   box-shadow:
     0 10px 30px
-    rgba(229, 9, 20, 0.3);
+    rgba(229,9,20,.35);
 }
 
 .btn-dark {
-  color: #fff;
-
-  background: #171717;
+  background: #151515;
 
   border:
     1px solid
-    rgba(255, 255, 255, 0.12);
+    rgba(255,255,255,.12);
 }
 
 .btn-dark:hover {
@@ -381,31 +311,35 @@ video {
 }
 
 
-/* =========================================================
-   CONTENT
-========================================================= */
+/* ================= CONTENT ================= */
 
-.content-section {
+.content {
   position: relative;
 
-  background: #000;
+  z-index: 3;
+
+  width: min(
+    calc(100% - 40px),
+    1400px
+  );
+
+  margin: auto;
 
   padding:
-    30px 0
-    70px;
+    25px 0 60px;
+
+  background: #000;
 }
 
 
-/* =========================================================
-   FILTER
-========================================================= */
+/* ================= FILTER ================= */
 
 .filter-bar {
   display: flex;
 
   gap: 10px;
 
-  margin-bottom: 30px;
+  margin-bottom: 32px;
 
   overflow-x: auto;
 
@@ -419,23 +353,22 @@ video {
 .filter-btn {
   flex-shrink: 0;
 
-  min-width: 100px;
+  padding:
+    10px 20px;
 
-  padding: 10px 18px;
-
-  color: #999;
+  color: #aaa;
 
   background: #090909;
 
   border:
     1px solid
-    rgba(255, 255, 255, 0.1);
+    var(--border);
 
   border-radius: 7px;
 
   font-size: 15px;
 
-  transition: 0.2s;
+  transition: .2s;
 }
 
 .filter-btn:hover,
@@ -445,34 +378,25 @@ video {
   background: var(--red);
 
   border-color: var(--red);
-
-  box-shadow:
-    0 5px 20px
-    rgba(229, 9, 20, 0.15);
 }
 
 
-/* =========================================================
-   CATALOG
-========================================================= */
+/* ================= SECTION ================= */
 
 .catalog-section {
-  margin-bottom: 42px;
+  margin-bottom: 45px;
 }
 
-.section-title {
+.section-heading {
   margin-bottom: 17px;
 }
 
-.section-title h2 {
-  color: #fff;
-
+.section-heading h2 {
   font-size: 24px;
-
-  font-weight: 900;
+  font-weight: 800;
 }
 
-.section-title h2::before {
+.section-heading h2::before {
   content: "";
 
   display: inline-block;
@@ -490,9 +414,7 @@ video {
 }
 
 
-/* =========================================================
-   GRID
-========================================================= */
+/* ================= GRID ================= */
 
 .video-grid {
   display: grid;
@@ -500,51 +422,41 @@ video {
   grid-template-columns:
     repeat(
       auto-fill,
-      minmax(190px, 1fr)
+      minmax(190px,1fr)
     );
 
-  gap: 16px;
+  gap: 17px;
 }
 
 
-/* =========================================================
-   CARD
-========================================================= */
+/* ================= CARD ================= */
 
 .video-card {
-  position: relative;
-
   overflow: hidden;
 
-  background: #090909;
+  background: var(--card);
 
   border:
     1px solid
-    rgba(255, 255, 255, 0.07);
+    rgba(255,255,255,.07);
 
   border-radius: 8px;
 
   cursor: pointer;
 
-  transition:
-    transform 0.25s,
-    border-color 0.25s,
-    box-shadow 0.25s;
+  transition: .25s;
 }
 
 .video-card:hover {
   transform: translateY(-4px);
 
   border-color:
-    rgba(229, 9, 20, 0.6);
+    rgba(229,9,20,.6);
 
   box-shadow:
-    0 10px 30px
-    rgba(229, 9, 20, 0.15);
+    0 8px 25px
+    rgba(229,9,20,.14);
 }
-
-
-/* CARD VIDEO */
 
 .card-video {
   position: relative;
@@ -563,18 +475,7 @@ video {
   height: 100%;
 
   object-fit: cover;
-
-  transition:
-    transform 0.3s;
 }
-
-.video-card:hover
-.card-video video {
-  transform: scale(1.04);
-}
-
-
-/* CARD PLAY */
 
 .card-play {
   position: absolute;
@@ -582,8 +483,8 @@ video {
   top: 50%;
   left: 50%;
 
-  width: 45px;
-  height: 45px;
+  width: 44px;
+  height: 44px;
 
   display: flex;
 
@@ -591,40 +492,33 @@ video {
   justify-content: center;
 
   transform:
-    translate(-50%, -50%);
-
-  color: #fff;
+    translate(-50%,-50%);
 
   background:
-    rgba(229, 9, 20, 0.94);
+    rgba(229,9,20,.95);
 
   border-radius: 50%;
 
   opacity: 0;
 
-  transition: 0.25s;
+  transition: .2s;
 }
 
-.video-card:hover
-.card-play {
+.video-card:hover .card-play {
   opacity: 1;
 }
 
-
-/* CARD INFO */
-
 .card-info {
-  padding: 11px 12px 13px;
+  padding: 12px;
 }
 
 .card-title {
-  margin-bottom: 6px;
+  margin-bottom: 7px;
 
   color: #fff;
 
-  font-size: 14px;
-
-  font-weight: 800;
+  font-size: 15px;
+  font-weight: 700;
 
   white-space: nowrap;
 
@@ -636,7 +530,7 @@ video {
 .card-meta {
   display: flex;
 
-  gap: 6px;
+  gap: 7px;
 
   color: #777;
 
@@ -646,13 +540,11 @@ video {
 .card-rating {
   color: var(--red);
 
-  font-weight: 800;
+  font-weight: 700;
 }
 
 
-/* =========================================================
-   EMPTY
-========================================================= */
+/* ================= EMPTY ================= */
 
 .empty-state {
   padding: 60px 20px;
@@ -661,19 +553,14 @@ video {
 }
 
 .empty-icon {
-  margin-bottom: 8px;
-
   color: var(--red);
 
   font-size: 45px;
-
   font-weight: 900;
 }
 
 .empty-state h3 {
   margin-bottom: 7px;
-
-  font-size: 21px;
 }
 
 .empty-state p {
@@ -681,9 +568,7 @@ video {
 }
 
 
-/* =========================================================
-   DETAIL MODAL
-========================================================= */
+/* ================= DETAIL MODAL ================= */
 
 .modal {
   position: fixed;
@@ -706,10 +591,10 @@ video {
   inset: 0;
 
   background:
-    rgba(0, 0, 0, 0.94);
+    rgba(0,0,0,.94);
 }
 
-.modal-box {
+.detail-modal {
   position: relative;
 
   z-index: 2;
@@ -727,7 +612,7 @@ video {
 
   border:
     1px solid
-    rgba(229, 9, 20, 0.4);
+    var(--red-border);
 
   border-radius: 10px;
 }
@@ -735,8 +620,8 @@ video {
 .modal-close {
   position: absolute;
 
-  top: 12px;
-  right: 12px;
+  top: 10px;
+  right: 10px;
 
   z-index: 5;
 
@@ -746,11 +631,11 @@ video {
   color: #fff;
 
   background:
-    rgba(0, 0, 0, 0.85);
+    rgba(0,0,0,.8);
 
   border:
     1px solid
-    rgba(255, 255, 255, 0.1);
+    rgba(255,255,255,.15);
 
   border-radius: 50%;
 
@@ -761,37 +646,28 @@ video {
   background: var(--red);
 }
 
-
-/* =========================================================
-   DETAIL VIDEO
-========================================================= */
-
 .detail-video {
-  width: 100%;
-
   background: #000;
 }
 
 .detail-video video {
   width: 100%;
 
-  max-height: 500px;
+  max-height: 480px;
 
   background: #000;
-
-  object-fit: contain;
 }
 
-.detail-content {
-  padding: 22px;
+.detail-body {
+  padding: 23px;
 }
 
 .badge {
   display: inline-block;
 
-  margin-bottom: 10px;
-
   padding: 5px 9px;
+
+  margin-bottom: 10px;
 
   color: #fff;
 
@@ -799,15 +675,12 @@ video {
 
   border-radius: 4px;
 
-  font-size: 10px;
-
-  font-weight: 900;
+  font-size: 11px;
+  font-weight: 800;
 }
 
-.detail-content h2 {
-  margin-bottom: 9px;
-
-  color: #fff;
+.detail-body h2 {
+  margin-bottom: 10px;
 
   font-size: 30px;
 }
@@ -815,7 +688,7 @@ video {
 .detail-meta {
   display: flex;
 
-  gap: 7px;
+  gap: 8px;
 
   margin-bottom: 17px;
 
@@ -824,7 +697,7 @@ video {
   font-size: 13px;
 }
 
-.detail-content p {
+.detail-body p {
   color: #aaa;
 
   line-height: 1.7;
@@ -832,8 +705,7 @@ video {
 
 .cast {
   margin:
-    13px 0
-    20px;
+    15px 0 20px;
 }
 
 .cast strong {
@@ -841,9 +713,7 @@ video {
 }
 
 
-/* =========================================================
-   PLAYER
-========================================================= */
+/* ================= PLAYER ================= */
 
 .player-modal {
   position: fixed;
@@ -857,35 +727,35 @@ video {
   align-items: center;
   justify-content: center;
 
-  background: #000;
-
   padding: 15px;
+
+  background: #000;
 }
 
-.player-container {
-  position: relative;
-
+.player-box {
   width: min(
     1200px,
     100%
   );
+
+  position: relative;
 }
 
-.main-player {
+.player-box video {
+  display: block;
+
   width: 100%;
 
   max-height: 90vh;
 
   background: #000;
-
-  outline: none;
 }
 
 .player-close {
   position: fixed;
 
   top: 15px;
-  right: 15px;
+  right: 18px;
 
   z-index: 3100;
 
@@ -894,15 +764,15 @@ video {
 
   color: #fff;
 
-  background: #111;
+  background: #151515;
 
   border:
     1px solid
-    rgba(255, 255, 255, 0.12);
+    rgba(255,255,255,.15);
 
   border-radius: 50%;
 
-  font-size: 27px;
+  font-size: 26px;
 }
 
 .player-close:hover {
@@ -916,11 +786,9 @@ video {
   left: 50%;
 
   transform:
-    translate(-50%, -50%);
+    translate(-50%,-50%);
 
   padding: 15px;
-
-  color: #fff;
 
   background: #111;
 
@@ -930,9 +798,7 @@ video {
 }
 
 
-/* =========================================================
-   FOOTER
-========================================================= */
+/* ================= FOOTER ================= */
 
 .footer {
   padding: 25px 0;
@@ -941,21 +807,25 @@ video {
 
   border-top:
     1px solid
-    rgba(229, 9, 20, 0.25);
+    rgba(229,9,20,.25);
 }
 
 .footer-inner {
+  width: min(
+    calc(100% - 40px),
+    1400px
+  );
+
+  margin: auto;
+
   display: flex;
 
   align-items: center;
   justify-content: space-between;
-
-  gap: 15px;
 }
 
 .footer-logo {
   font-size: 20px;
-
   font-weight: 900;
 }
 
@@ -966,42 +836,19 @@ video {
 }
 
 
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #000;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--red);
-
-  border-radius: 10px;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
+/* ================= MOBILE ================= */
 
 @media (max-width: 700px) {
 
-  .container {
-    width:
-      calc(100% - 24px);
-  }
-
-
-  /* HEADER */
-
   .header {
     height: 62px;
+  }
+
+  .header-inner {
+    width:
+      calc(100% - 24px);
+
+    gap: 10px;
   }
 
   .logo {
@@ -1013,13 +860,13 @@ video {
   }
 
   .search-input {
-    height: 39px;
+    height: 38px;
 
     font-size: 13px;
   }
 
 
-  /* HERO */
+  /* HERO DIPENDEKKAN */
 
   .hero {
     min-height: 470px;
@@ -1029,41 +876,37 @@ video {
 
   .hero-media {
     top: 62px;
-
-    height: 360px;
   }
 
   .hero-content {
     width:
       calc(100% - 24px);
 
-    padding-bottom: 38px;
+    padding-bottom: 35px;
   }
 
-  .hero-label {
-    margin-bottom: 9px;
-
+  .featured-label {
     font-size: 12px;
 
-    letter-spacing: 2px;
+    letter-spacing: 2.5px;
   }
 
   .hero h1 {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 
-    font-size: 42px;
+    font-size: 44px;
   }
 
   .hero p {
     max-width: 100%;
 
-    font-size: 14px;
+    font-size: 15px;
 
     line-height: 1.55;
   }
 
-  .hero-buttons {
-    margin-top: 17px;
+  .hero-actions {
+    margin-top: 20px;
   }
 
   .btn {
@@ -1071,68 +914,45 @@ video {
 
     padding: 0 16px;
 
-    font-size: 13px;
+    font-size: 14px;
   }
 
 
-  /* CONTENT */
+  /* CONTENT LEBIH DEKAT */
 
-  .content-section {
-    padding-top: 22px;
+  .content {
+    width:
+      calc(100% - 24px);
+
+    padding-top: 18px;
   }
 
   .filter-bar {
     margin-bottom: 25px;
   }
 
-  .filter-btn {
-    min-width: 96px;
 
-    padding: 9px 15px;
-  }
-
-
-  /* GRID */
+  /* CARD 2 KOLOM */
 
   .video-grid {
     grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+      repeat(2,minmax(0,1fr));
 
-    gap: 9px;
+    gap: 10px;
   }
-
-  .catalog-section {
-    margin-bottom: 35px;
-  }
-
-  .section-title {
-    margin-bottom: 13px;
-  }
-
-  .section-title h2 {
-    font-size: 20px;
-  }
-
-  .section-title h2::before {
-    width: 3px;
-    height: 19px;
-  }
-
-
-  /* CARD */
 
   .card-info {
     padding: 9px;
   }
 
   .card-title {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .card-meta {
-    gap: 4px;
-
     font-size: 9px;
+
+    gap: 4px;
   }
 
   .card-play {
@@ -1143,82 +963,54 @@ video {
   }
 
 
-  /* DETAIL */
-
-  .detail-content {
-    padding: 17px;
+  .section-heading h2 {
+    font-size: 21px;
   }
 
-  .detail-content h2 {
+
+  .detail-body h2 {
     font-size: 24px;
   }
 
 
-  /* FOOTER */
-
   .footer-inner {
+    width:
+      calc(100% - 24px);
+
     flex-direction: column;
 
     align-items: flex-start;
+
+    gap: 10px;
   }
 }
 
 
-/* =========================================================
-   SMALL PHONE
-========================================================= */
-
 @media (max-width: 430px) {
-
-  .header-inner {
-    gap: 8px;
-  }
 
   .logo {
     font-size: 17px;
   }
 
   .search-wrapper {
-    width: 155px;
-  }
-
-  .search-input {
-    padding: 0 12px;
-
-    font-size: 12px;
+    width: 160px;
   }
 
   .hero {
-    min-height: 445px;
-  }
-
-  .hero-media {
-    height: 330px;
+    min-height: 450px;
   }
 
   .hero h1 {
-    font-size: 39px;
+    font-size: 40px;
   }
 
-  .hero p {
-    font-size: 13px;
-  }
-
-  .hero-buttons {
-    gap: 8px;
-  }
-
-  .btn {
-    padding: 0 14px;
-  }
-
-  .filter-bar {
-    gap: 7px;
+  .hero-actions {
+    flex-wrap: wrap;
   }
 
   .filter-btn {
-    min-width: 90px;
-
-    font-size: 14px;
+    padding:
+      9px 17px;
   }
+
 }
