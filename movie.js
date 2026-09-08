@@ -2,21 +2,15 @@ const movies = [
 
   {
     id: 1,
-
     title: "Contoh Film Action",
-
     year: 2026,
-
     genre: "Action",
-
     rating: "8.5",
-
     type: "movie",
-
     featured: true,
 
     description:
-      "Contoh data film. Ganti dengan konten video yang kamu punya hak untuk ditayangkan.",
+      "Ganti data ini dengan film yang kamu punya hak untuk ditayangkan.",
 
     cast:
       "Actor 1, Actor 2, Actor 3",
@@ -28,21 +22,15 @@ const movies = [
 
   {
     id: 2,
-
     title: "Contoh Film Drama",
-
     year: 2026,
-
     genre: "Drama",
-
     rating: "8.1",
-
     type: "movie",
-
     featured: false,
 
     description:
-      "Contoh film drama untuk katalog RedFlix.",
+      "Contoh film drama untuk katalog.",
 
     cast:
       "Actor 4, Actor 5",
@@ -54,21 +42,15 @@ const movies = [
 
   {
     id: 3,
-
     title: "Contoh Series",
-
     year: 2026,
-
     genre: "Series",
-
     rating: "8.7",
-
     type: "series",
-
     featured: false,
 
     description:
-      "Contoh series dengan video preview.",
+      "Contoh series.",
 
     cast:
       "Actor 6, Actor 7",
@@ -80,17 +62,11 @@ const movies = [
 
   {
     id: 4,
-
     title: "Contoh Series Action",
-
     year: 2026,
-
     genre: "Action",
-
     rating: "8.3",
-
     type: "series",
-
     featured: false,
 
     description:
