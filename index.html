@@ -4,12 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>RedFlix</title>
-
-  <meta
-    name="description"
-    content="RedFlix - Streaming film dan series."
-  >
+  <title id="page-title">RedFlix</title>
 
   <link rel="stylesheet" href="style.css">
 
@@ -18,20 +13,20 @@
 
 <body>
 
-  <!-- HEADER -->
+  <!-- ================= HEADER ================= -->
   <header class="header">
     <div class="header-inner">
 
-      <a href="#" class="logo">
-        <span>RED</span>FLIX
-      </a>
+      <div class="logo">
+        Red<span>Flix</span>
+      </div>
 
       <div class="search-wrapper">
         <input
+          type="search"
           id="searchInput"
           class="search-input"
-          type="search"
-          placeholder="Cari film atau series..."
+          placeholder="Cari film..."
           autocomplete="off"
         >
       </div>
@@ -40,24 +35,19 @@
   </header>
 
 
-  <!-- HERO -->
+  <!-- ================= HERO ================= -->
   <section class="hero">
 
     <div class="hero-media">
-
       <video
         id="heroVideo"
         muted
-        autoplay
-        loop
         playsinline
         preload="metadata"
       ></video>
 
       <div class="hero-gradient"></div>
-
     </div>
-
 
     <div class="hero-content">
 
@@ -70,41 +60,40 @@
       </h1>
 
       <p id="heroDescription">
-        Saksikan film dan series favoritmu.
+        Temukan film dan series pilihanmu.
       </p>
 
       <div class="hero-actions">
 
         <button
-          id="heroPlayBtn"
-          class="btn btn-red"
           type="button"
+          class="btn btn-red"
+          id="heroPlayBtn"
         >
-          ▶ Mulai Nonton
+          ▶ Play
         </button>
 
         <button
-          id="heroInfoBtn"
-          class="btn btn-dark"
           type="button"
+          class="btn btn-dark"
+          id="heroInfoBtn"
         >
-          ℹ Detail
+          ℹ Info
         </button>
 
       </div>
 
     </div>
-
   </section>
 
 
-  <!-- CONTENT -->
+  <!-- ================= CONTENT ================= -->
   <main class="content">
 
-    <!-- FILTER -->
     <div class="filter-bar">
 
       <button
+        type="button"
         class="filter-btn active"
         data-filter="all"
       >
@@ -112,6 +101,7 @@
       </button>
 
       <button
+        type="button"
         class="filter-btn"
         data-filter="movie"
       >
@@ -119,6 +109,7 @@
       </button>
 
       <button
+        type="button"
         class="filter-btn"
         data-filter="series"
       >
@@ -128,11 +119,8 @@
     </div>
 
 
-    <!-- FILM -->
-    <section
-      id="movieSection"
-      class="catalog-section"
-    >
+    <!-- ================= MOVIES ================= -->
+    <section class="catalog-section">
 
       <div class="section-heading">
         <h2>Film</h2>
@@ -146,11 +134,8 @@
     </section>
 
 
-    <!-- SERIES -->
-    <section
-      id="seriesSection"
-      class="catalog-section"
-    >
+    <!-- ================= SERIES ================= -->
+    <section class="catalog-section">
 
       <div class="section-heading">
         <h2>Series</h2>
@@ -164,29 +149,28 @@
     </section>
 
 
-    <!-- EMPTY -->
+    <!-- ================= EMPTY ================= -->
     <div
       id="emptyState"
       class="empty-state hidden"
     >
       <div class="empty-icon">×</div>
 
-      <h3>
-        Tidak ditemukan
-      </h3>
+      <h3>Tidak ditemukan</h3>
 
       <p>
-        Coba cari dengan kata kunci lain.
+        Film atau series yang kamu cari tidak tersedia.
       </p>
     </div>
 
   </main>
 
 
-  <!-- DETAIL MODAL -->
+  <!-- ================= DETAIL MODAL ================= -->
   <div
     id="detailModal"
     class="modal hidden"
+    aria-hidden="true"
   >
 
     <div
@@ -197,9 +181,10 @@
     <div class="detail-modal">
 
       <button
+        type="button"
         class="modal-close"
         data-close-detail
-        type="button"
+        aria-label="Tutup"
       >
         ×
       </button>
@@ -208,9 +193,10 @@
 
         <video
           id="detailVideo"
-          controls
+          muted
           playsinline
           preload="metadata"
+          controls
         ></video>
 
       </div>
@@ -221,48 +207,50 @@
           id="detailType"
           class="badge"
         >
-          FILM
+          MOVIE
         </span>
 
         <h2 id="detailTitle">
-          Judul
+          -
         </h2>
 
         <div class="detail-meta">
 
           <span id="detailYear">
-            2026
-          </span>
-
-          <span>•</span>
-
-          <span id="detailGenre">
-            Action
+            -
           </span>
 
           <span>•</span>
 
           <span id="detailRating">
-            ★ 8.0
+            -
+          </span>
+
+          <span>•</span>
+
+          <span id="detailGenre">
+            -
           </span>
 
         </div>
 
         <p id="detailDescription">
-          Deskripsi.
+          -
         </p>
 
-        <p class="cast">
+        <div class="cast">
           <strong>Pemeran:</strong>
-          <span id="detailCast">-</span>
-        </p>
+          <span id="detailCast">
+            -
+          </span>
+        </div>
 
         <button
-          id="detailPlayBtn"
-          class="btn btn-red"
           type="button"
+          class="btn btn-red"
+          id="detailPlayBtn"
         >
-          ▶ Tonton Sekarang
+          ▶ Play Sekarang
         </button>
 
       </div>
@@ -272,16 +260,18 @@
   </div>
 
 
-  <!-- PLAYER -->
+  <!-- ================= PLAYER MODAL ================= -->
   <div
     id="playerModal"
     class="player-modal hidden"
+    aria-hidden="true"
   >
 
     <button
+      type="button"
       id="playerClose"
       class="player-close"
-      type="button"
+      aria-label="Tutup player"
     >
       ×
     </button>
@@ -307,17 +297,17 @@
   </div>
 
 
-  <!-- FOOTER -->
+  <!-- ================= FOOTER ================= -->
   <footer class="footer">
 
     <div class="footer-inner">
 
       <div class="footer-logo">
-        <span>RED</span>FLIX
+        Red<span>Flix</span>
       </div>
 
       <p>
-        © 2026 RedFlix
+        © 2026 RedFlix. All rights reserved.
       </p>
 
     </div>
