@@ -27,7 +27,6 @@ html {
 
 body {
   min-height: 100vh;
-
   background: #000;
   color: #fff;
 
@@ -57,7 +56,6 @@ button {
 
 .header {
   position: fixed;
-
   top: 0;
   left: 0;
 
@@ -82,7 +80,6 @@ button {
   );
 
   height: 100%;
-
   margin: auto;
 
   display: flex;
@@ -118,7 +115,6 @@ button {
   padding: 0 15px;
 
   color: #fff;
-
   background: #080808;
 
   border:
@@ -865,9 +861,6 @@ button {
     font-size: 13px;
   }
 
-
-  /* HERO DIPENDEKKAN */
-
   .hero {
     min-height: 470px;
 
@@ -917,9 +910,6 @@ button {
     font-size: 14px;
   }
 
-
-  /* CONTENT LEBIH DEKAT */
-
   .content {
     width:
       calc(100% - 24px);
@@ -930,9 +920,6 @@ button {
   .filter-bar {
     margin-bottom: 25px;
   }
-
-
-  /* CARD 2 KOLOM */
 
   .video-grid {
     grid-template-columns:
@@ -962,16 +949,13 @@ button {
     font-size: 13px;
   }
 
-
   .section-heading h2 {
     font-size: 21px;
   }
 
-
   .detail-body h2 {
     font-size: 24px;
   }
-
 
   .footer-inner {
     width:
