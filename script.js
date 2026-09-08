@@ -28,7 +28,6 @@ const playerModal = document.getElementById("playerModal");
 const mainPlayer = document.getElementById("mainPlayer");
 const playerError = document.getElementById("playerError");
 const playerClose = document.getElementById("playerClose");
-
 const detailPlayBtn = document.getElementById("detailPlayBtn");
 
 
@@ -45,7 +44,7 @@ function loadVideo(videoElement, url, autoplay = false) {
   videoElement.removeAttribute("src");
   videoElement.load();
 
-  /* ================= MP4 / WEBM ================= */
+  /* MP4 / WEBM */
   if (!url.includes(".m3u8")) {
     videoElement.src = url;
 
@@ -56,8 +55,7 @@ function loadVideo(videoElement, url, autoplay = false) {
     return;
   }
 
-
-  /* ================= NATIVE HLS ================= */
+  /* Native HLS */
   if (
     videoElement.canPlayType(
       "application/vnd.apple.mpegurl"
@@ -72,8 +70,7 @@ function loadVideo(videoElement, url, autoplay = false) {
     return;
   }
 
-
-  /* ================= HLS.JS ================= */
+  /* HLS.JS */
   if (
     typeof Hls !== "undefined" &&
     Hls.isSupported()
@@ -100,10 +97,7 @@ function loadVideo(videoElement, url, autoplay = false) {
     currentHls.on(
       Hls.Events.ERROR,
       (event, data) => {
-        console.error(
-          "HLS error:",
-          data
-        );
+        console.error("HLS error:", data);
       }
     );
   }
@@ -125,9 +119,7 @@ function createCard(movie) {
         preload="metadata"
       ></video>
 
-      <div class="card-play">
-        ▶
-      </div>
+      <div class="card-play">▶</div>
     </div>
 
     <div class="card-info">
@@ -147,48 +139,26 @@ function createCard(movie) {
     </div>
   `;
 
-  const video =
-    card.querySelector("video");
+  const video = card.querySelector("video");
 
+  loadVideo(video, movie.video);
 
-  /* Load preview */
-  loadVideo(
-    video,
-    movie.video
-  );
+  card.addEventListener("mouseenter", () => {
+    video.currentTime = 0;
+    video.play().catch(() => {});
+  });
 
+  card.addEventListener("mouseleave", () => {
+    video.pause();
 
-  /* Hover desktop */
-  card.addEventListener(
-    "mouseenter",
-    () => {
+    try {
       video.currentTime = 0;
+    } catch (e) {}
+  });
 
-      video.play().catch(() => {});
-    }
-  );
-
-
-  card.addEventListener(
-    "mouseleave",
-    () => {
-      video.pause();
-
-      try {
-        video.currentTime = 0;
-      } catch (e) {}
-    }
-  );
-
-
-  /* Open detail */
-  card.addEventListener(
-    "click",
-    () => {
-      openDetail(movie);
-    }
-  );
-
+  card.addEventListener("click", () => {
+    openDetail(movie);
+  });
 
   return card;
 }
@@ -199,18 +169,13 @@ function renderMovies(list) {
   movieGrid.innerHTML = "";
   seriesGrid.innerHTML = "";
 
+  const filmList = list.filter(
+    movie => movie.type === "movie"
+  );
 
-  const filmList =
-    list.filter(
-      movie => movie.type === "movie"
-    );
-
-
-  const seriesList =
-    list.filter(
-      movie => movie.type === "series"
-    );
-
+  const seriesList = list.filter(
+    movie => movie.type === "series"
+  );
 
   filmList.forEach(movie => {
     movieGrid.appendChild(
@@ -218,25 +183,21 @@ function renderMovies(list) {
     );
   });
 
-
   seriesList.forEach(movie => {
     seriesGrid.appendChild(
       createCard(movie)
     );
   });
 
-
   movieSection.classList.toggle(
     "hidden",
     filmList.length === 0
   );
 
-
   seriesSection.classList.toggle(
     "hidden",
     seriesList.length === 0
   );
-
 
   emptyState.classList.toggle(
     "hidden",
@@ -252,20 +213,15 @@ function setupHero() {
       movie => movie.featured === true
     ) || movies[0];
 
-
   if (!featured) return;
 
-
   currentMovie = featured;
-
 
   heroTitle.textContent =
     featured.title;
 
-
   heroDescription.textContent =
     featured.description;
-
 
   loadVideo(
     heroVideo,
@@ -273,11 +229,9 @@ function setupHero() {
     true
   );
 
-
   heroPlayBtn.onclick = () => {
     openPlayer(featured);
   };
-
 
   heroInfoBtn.onclick = () => {
     openDetail(featured);
@@ -289,27 +243,22 @@ function setupHero() {
 function openDetail(movie) {
   currentMovie = movie;
 
-
   document.getElementById(
     "detailTitle"
   ).textContent = movie.title;
-
 
   document.getElementById(
     "detailYear"
   ).textContent = movie.year;
 
-
   document.getElementById(
     "detailGenre"
   ).textContent = movie.genre;
-
 
   document.getElementById(
     "detailRating"
   ).textContent =
     `★ ${movie.rating}`;
-
 
   document.getElementById(
     "detailType"
@@ -318,53 +267,46 @@ function openDetail(movie) {
       ? "SERIES"
       : "FILM";
 
-
   document.getElementById(
     "detailDescription"
   ).textContent =
     movie.description;
-
 
   document.getElementById(
     "detailCast"
   ).textContent =
     movie.cast || "-";
 
-
   loadVideo(
     detailVideo,
     movie.video
   );
 
-
   detailModal.classList.remove(
     "hidden"
   );
-
 
   document.body.style.overflow =
     "hidden";
 }
 
 
-/* ================= PLAYER ================= */
+/* =========================================================
+   PLAYER
+========================================================= */
 function openPlayer(movie) {
   currentMovie = movie;
-
 
   playerError.classList.add(
     "hidden"
   );
 
-
   playerModal.classList.remove(
     "hidden"
   );
 
-
   document.body.style.overflow =
     "hidden";
-
 
   loadVideo(
     mainPlayer,
@@ -375,22 +317,86 @@ function openPlayer(movie) {
 
 
 /* =========================================================
-   IKLAN KLIK VIDEO
-   Hanya area video.
-   Tidak memakai preventDefault sehingga scrolling halaman
-   tetap normal.
+   IKLAN VIDEO
+   Klik/tap video = buka Shopee
+   Swipe/scroll = tidak membuka iklan
 ========================================================= */
 
+let videoPointerDownX = 0;
+let videoPointerDownY = 0;
+let videoPointerMoved = false;
+
 if (mainPlayer) {
+
   mainPlayer.addEventListener(
-    "click",
-    function () {
+    "pointerdown",
+    event => {
+
+      videoPointerDownX =
+        event.clientX;
+
+      videoPointerDownY =
+        event.clientY;
+
+      videoPointerMoved = false;
+    },
+    {
+      passive: true
+    }
+  );
+
+
+  mainPlayer.addEventListener(
+    "pointermove",
+    event => {
+
+      const moveX =
+        Math.abs(
+          event.clientX -
+          videoPointerDownX
+        );
+
+      const moveY =
+        Math.abs(
+          event.clientY -
+          videoPointerDownY
+        );
 
       /*
-       * Jangan pakai preventDefault()
-       * agar scrolling tetap normal.
+       * Kalau jari bergerak cukup jauh,
+       * anggap sebagai swipe/scroll.
        */
+      if (
+        moveX > 10 ||
+        moveY > 10
+      ) {
+        videoPointerMoved = true;
+      }
+    },
+    {
+      passive: true
+    }
+  );
 
+
+  mainPlayer.addEventListener(
+    "click",
+    event => {
+
+      /*
+       * Jangan buka iklan kalau tadi
+       * merupakan swipe/scroll.
+       */
+      if (videoPointerMoved) {
+        return;
+      }
+
+
+      /*
+       * Buka iklan karena user memang
+       * melakukan klik/tap langsung
+       * pada area video.
+       */
       window.open(
         SHOPEE_AD_URL,
         "_blank",
@@ -398,12 +404,15 @@ if (mainPlayer) {
       );
     }
   );
+
 }
 
 
 /* ================= CLOSE DETAIL ================= */
 function closeDetail() {
+
   if (detailVideo) {
+
     detailVideo.pause();
 
     detailVideo.removeAttribute(
@@ -413,11 +422,9 @@ function closeDetail() {
     detailVideo.load();
   }
 
-
   detailModal.classList.add(
     "hidden"
   );
-
 
   document.body.style.overflow =
     "";
@@ -426,7 +433,9 @@ function closeDetail() {
 
 /* ================= CLOSE PLAYER ================= */
 function closePlayer() {
+
   if (mainPlayer) {
+
     mainPlayer.pause();
 
     mainPlayer.removeAttribute(
@@ -438,7 +447,9 @@ function closePlayer() {
 
 
   if (currentHls) {
+
     currentHls.destroy();
+
     currentHls = null;
   }
 
@@ -446,7 +457,6 @@ function closePlayer() {
   playerModal.classList.add(
     "hidden"
   );
-
 
   document.body.style.overflow =
     "";
@@ -477,12 +487,14 @@ if (detailPlayBtn) {
 
       if (!currentMovie) return;
 
-
       closeDetail();
 
-
       setTimeout(() => {
-        openPlayer(currentMovie);
+
+        openPlayer(
+          currentMovie
+        );
+
       }, 100);
 
     }
@@ -518,7 +530,9 @@ document.addEventListener(
         "hidden"
       )
     ) {
+
       closePlayer();
+
       return;
     }
 
@@ -529,7 +543,9 @@ document.addEventListener(
         "hidden"
       )
     ) {
+
       closeDetail();
+
     }
 
   }
@@ -553,16 +569,22 @@ if (searchInput) {
         movies.filter(movie => {
 
           return (
+
             movie.title
               .toLowerCase()
-              .includes(keyword) ||
+              .includes(keyword)
+
+            ||
 
             movie.genre
               .toLowerCase()
-              .includes(keyword) ||
+              .includes(keyword)
+
+            ||
 
             String(movie.year)
               .includes(keyword)
+
           );
 
         });
@@ -611,9 +633,11 @@ document
 
         if (filter === "all") {
 
-          renderMovies(movies);
-          return;
+          renderMovies(
+            movies
+          );
 
+          return;
         }
 
 
