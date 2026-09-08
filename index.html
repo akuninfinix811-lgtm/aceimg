@@ -8,12 +8,11 @@
 
   <meta
     name="description"
-    content="RedFlix - Website streaming dengan tema hitam dan merah."
+    content="RedFlix - Streaming film dan series"
   >
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- HLS.js untuk video .m3u8 -->
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 
@@ -42,15 +41,13 @@
   </header>
 
 
-  <!-- ================= MAIN ================= -->
+  <!-- ================= HERO ================= -->
 
   <main>
 
-    <!-- ================= HERO ================= -->
-
     <section class="hero">
 
-      <div class="hero-video">
+      <div class="hero-media">
         <video
           id="heroVideo"
           muted
@@ -65,32 +62,32 @@
 
       <div class="container hero-content">
 
-        <span class="hero-label">
+        <div class="hero-label">
           FEATURED
-        </span>
+        </div>
 
         <h1 id="heroTitle">
           RedFlix
         </h1>
 
         <p id="heroDescription">
-          Saksikan film dan series pemersatu bangsa favoritmu.
+          Saksikan film dan series favorit kamu.
         </p>
 
         <div class="hero-buttons">
 
           <button
             type="button"
-            class="btn btn-red"
             id="heroPlayBtn"
+            class="btn btn-red"
           >
             ▶ Mulai Nonton
           </button>
 
           <button
             type="button"
-            class="btn btn-dark"
             id="heroInfoBtn"
+            class="btn btn-dark"
           >
             ℹ Detail
           </button>
@@ -113,6 +110,7 @@
         <div class="filter-bar">
 
           <button
+            type="button"
             class="filter-btn active"
             data-filter="all"
           >
@@ -120,6 +118,7 @@
           </button>
 
           <button
+            type="button"
             class="filter-btn"
             data-filter="movie"
           >
@@ -127,6 +126,7 @@
           </button>
 
           <button
+            type="button"
             class="filter-btn"
             data-filter="series"
           >
@@ -138,7 +138,10 @@
 
         <!-- FILM -->
 
-        <section class="catalog-section">
+        <section
+          class="catalog-section"
+          id="movieSection"
+        >
 
           <div class="section-title">
             <h2>Film</h2>
@@ -154,7 +157,10 @@
 
         <!-- SERIES -->
 
-        <section class="catalog-section">
+        <section
+          class="catalog-section"
+          id="seriesSection"
+        >
 
           <div class="section-title">
             <h2>Series</h2>
@@ -174,6 +180,7 @@
           id="emptyState"
           class="empty-state hidden"
         >
+
           <div class="empty-icon">
             ×
           </div>
@@ -183,8 +190,9 @@
           </h3>
 
           <p>
-            Coba gunakan kata kunci pencarian yang berbeda.
+            Coba gunakan kata kunci lain.
           </p>
+
         </div>
 
       </div>
@@ -199,31 +207,27 @@
   <div
     id="detailModal"
     class="modal hidden"
-    aria-hidden="true"
   >
 
     <div class="modal-backdrop"></div>
 
-    <div class="modal-box detail-box">
+    <div class="modal-box">
 
       <button
         type="button"
         class="modal-close"
         data-close="detailModal"
-        aria-label="Tutup"
       >
         ×
       </button>
 
-      <div class="detail-video-wrapper">
-
+      <div class="detail-video">
         <video
           id="detailVideo"
           controls
           playsinline
           preload="metadata"
         ></video>
-
       </div>
 
       <div class="detail-content">
@@ -236,7 +240,7 @@
         </span>
 
         <h2 id="detailTitle">
-          Judul
+          Judul Film
         </h2>
 
         <div class="detail-meta">
@@ -285,19 +289,17 @@
   </div>
 
 
-  <!-- ================= FULL PLAYER ================= -->
+  <!-- ================= PLAYER ================= -->
 
   <div
     id="playerModal"
     class="player-modal hidden"
-    aria-hidden="true"
   >
 
     <button
       type="button"
       class="player-close"
       data-close="playerModal"
-      aria-label="Tutup player"
     >
       ×
     </button>
@@ -335,7 +337,7 @@
       </div>
 
       <p>
-        © 2026 RedFlix. Semua hak dilindungi.
+        © 2026 RedFlix
       </p>
 
     </div>
