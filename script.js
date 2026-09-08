@@ -4,10 +4,10 @@
 
 "use strict";
 
-
 /* ================= CONFIG ================= */
 
-const SHOPEE_AD_URL = "https://s.shopee.co.id/4qFQYYdc3C";
+const SHOPEE_AD_URL =
+  "https://s.shopee.co.id/4qFQYYdc3C";
 
 
 /* ================= ELEMENTS ================= */
@@ -93,57 +93,127 @@ let mainHls = null;
 
 
 /* =========================================================
-   VIDEO LOADER
+   HLS DESTROY
    ========================================================= */
 
 function destroyHls(instance) {
+
   if (instance) {
+
     try {
       instance.destroy();
     } catch (error) {
-      console.warn("HLS destroy error:", error);
+      console.warn(
+        "HLS destroy error:",
+        error
+      );
     }
+
   }
 
   return null;
 }
 
 
-function loadVideo(videoElement, url, autoplay = false) {
+/* =========================================================
+   VIDEO LOADER
+   ========================================================= */
+
+function loadVideo(
+  videoElement,
+  url,
+  autoplay = false
+) {
 
   if (!videoElement || !url) {
+
+    console.warn(
+      "Video element atau URL kosong."
+    );
+
     return null;
   }
 
-  const oldHls =
-    videoElement._redflixHls || null;
 
-  if (oldHls) {
+  /* ================= DESTROY OLD HLS ================= */
+
+  if (videoElement._redflixHls) {
+
     try {
-      oldHls.destroy();
+
+      videoElement._redflixHls.destroy();
+
     } catch (error) {
-      console.warn(error);
+
+      console.warn(
+        "Gagal destroy HLS:",
+        error
+      );
+
     }
 
     videoElement._redflixHls = null;
   }
 
-  videoElement.pause();
 
-  videoElement.removeAttribute("src");
-  videoElement.load();
+  /* ================= RESET VIDEO ================= */
+
+  try {
+
+    videoElement.pause();
+
+    videoElement.removeAttribute(
+      "src"
+    );
+
+    videoElement.load();
+
+  } catch (error) {
+
+    console.warn(
+      "Reset video error:",
+      error
+    );
+
+  }
+
+
+  const cleanUrl =
+    String(url).trim();
+
+
+  /* ================= FORMAT DETECTION ================= */
 
   const isHls =
-    /\.m3u8($|\?)/i.test(url);
+    /\.m3u8(?:$|[?#])/i.test(
+      cleanUrl
+    );
 
   const isMp4 =
-    /\.mp4($|\?)/i.test(url);
+    /\.mp4(?:$|[?#])/i.test(
+      cleanUrl
+    );
 
   const isWebm =
-    /\.webm($|\?)/i.test(url);
+    /\.webm(?:$|[?#])/i.test(
+      cleanUrl
+    );
 
 
-  /* ================= HLS.JS ================= */
+  console.log(
+    "Loading video:",
+    cleanUrl
+  );
+
+  console.log(
+    "HLS:",
+    isHls
+  );
+
+
+  /* =====================================================
+     HLS.JS
+     ===================================================== */
 
   if (
     isHls &&
@@ -151,52 +221,219 @@ function loadVideo(videoElement, url, autoplay = false) {
     Hls.isSupported()
   ) {
 
-    const hls = new Hls({
-      enableWorker: true,
-      lowLatencyMode: false
-    });
+    console.log(
+      "Menggunakan HLS.js"
+    );
 
-    videoElement._redflixHls = hls;
 
-    hls.loadSource(url);
-    hls.attachMedia(videoElement);
+    const hls =
+      new Hls({
+
+        enableWorker: false,
+
+        lowLatencyMode: false,
+
+        backBufferLength: 30,
+
+        maxBufferLength: 30
+
+      });
+
+
+    videoElement._redflixHls =
+      hls;
+
+
+    /* ================= MEDIA ATTACHED ================= */
+
+    hls.on(
+      Hls.Events.MEDIA_ATTACHED,
+      function () {
+
+        console.log(
+          "Media berhasil di-attach."
+        );
+
+        hls.loadSource(
+          cleanUrl
+        );
+
+      }
+    );
+
+
+    /* ================= MANIFEST LOADING ================= */
+
+    hls.on(
+      Hls.Events.MANIFEST_LOADING,
+      function () {
+
+        console.log(
+          "Manifest HLS sedang dimuat..."
+        );
+
+      }
+    );
+
+
+    /* ================= MANIFEST PARSED ================= */
 
     hls.on(
       Hls.Events.MANIFEST_PARSED,
-      function () {
+      function (_event, data) {
+
+        console.log(
+          "Manifest berhasil.",
+          "Quality:",
+          data.levels
+            ? data.levels.length
+            : 0
+        );
+
 
         if (autoplay) {
 
           videoElement
             .play()
-            .catch(() => {});
+            .then(function () {
+
+              console.log(
+                "Video mulai diputar."
+              );
+
+            })
+            .catch(function (error) {
+
+              console.warn(
+                "Autoplay diblokir:",
+                error
+              );
+
+            });
 
         }
+
       }
     );
+
+
+    /* ================= HLS ERROR ================= */
 
     hls.on(
       Hls.Events.ERROR,
       function (_event, data) {
 
+        console.error(
+          "HLS ERROR:",
+          data
+        );
+
+
         if (
-          data &&
-          data.fatal
+          !data ||
+          !data.fatal
         ) {
 
-          console.warn(
-            "HLS fatal error:",
-            data
-          );
+          return;
+
         }
+
+
+        switch (data.type) {
+
+          case Hls.ErrorTypes.NETWORK_ERROR:
+
+            console.warn(
+              "HLS network error. Mencoba recover..."
+            );
+
+            try {
+
+              hls.startLoad();
+
+            } catch (error) {
+
+              console.error(
+                "Network recovery gagal:",
+                error
+              );
+
+            }
+
+            break;
+
+
+          case Hls.ErrorTypes.MEDIA_ERROR:
+
+            console.warn(
+              "HLS media error. Mencoba recover..."
+            );
+
+            try {
+
+              hls.recoverMediaError();
+
+            } catch (error) {
+
+              console.error(
+                "Media recovery gagal:",
+                error
+              );
+
+            }
+
+            break;
+
+
+          default:
+
+            console.error(
+              "HLS fatal error:",
+              data
+            );
+
+
+            try {
+
+              hls.destroy();
+
+            } catch (error) {}
+
+
+            videoElement._redflixHls =
+              null;
+
+
+            if (playerError) {
+
+              playerError.classList.remove(
+                "hidden"
+              );
+
+            }
+
+            break;
+
+        }
+
       }
     );
+
+
+    /* ================= LOAD HLS ================= */
+
+    hls.attachMedia(
+      videoElement
+    );
+
 
     return hls;
   }
 
 
-  /* ================= NATIVE HLS ================= */
+  /* =====================================================
+     NATIVE HLS
+     ===================================================== */
 
   if (
     isHls &&
@@ -205,21 +442,51 @@ function loadVideo(videoElement, url, autoplay = false) {
     )
   ) {
 
-    videoElement.src = url;
+    console.log(
+      "Menggunakan native HLS."
+    );
 
-    if (autoplay) {
 
-      videoElement
-        .play()
-        .catch(() => {});
+    videoElement.src =
+      cleanUrl;
 
-    }
+
+    videoElement.addEventListener(
+      "loadedmetadata",
+      function handleMetadata() {
+
+        videoElement.removeEventListener(
+          "loadedmetadata",
+          handleMetadata
+        );
+
+
+        if (autoplay) {
+
+          videoElement
+            .play()
+            .catch(function (error) {
+
+              console.warn(
+                "Native autoplay diblokir:",
+                error
+              );
+
+            });
+
+        }
+
+      }
+    );
+
 
     return null;
   }
 
 
-  /* ================= MP4 / WEBM ================= */
+  /* =====================================================
+     MP4 / WEBM
+     ===================================================== */
 
   if (
     isMp4 ||
@@ -227,17 +494,51 @@ function loadVideo(videoElement, url, autoplay = false) {
     !isHls
   ) {
 
-    videoElement.src = url;
+    console.log(
+      "Menggunakan video HTML5."
+    );
+
+
+    videoElement.src =
+      cleanUrl;
+
 
     if (autoplay) {
 
       videoElement
         .play()
-        .catch(() => {});
+        .catch(function (error) {
+
+          console.warn(
+            "Autoplay MP4/WebM diblokir:",
+            error
+          );
+
+        });
 
     }
 
+
     return null;
+  }
+
+
+  /* =====================================================
+     FORMAT TIDAK DIDUKUNG
+     ===================================================== */
+
+  console.error(
+    "Format video tidak didukung:",
+    cleanUrl
+  );
+
+
+  if (playerError) {
+
+    playerError.classList.remove(
+      "hidden"
+    );
+
   }
 
 
@@ -246,32 +547,45 @@ function loadVideo(videoElement, url, autoplay = false) {
 
 
 /* =========================================================
-   CARD
+   CREATE CARD
    ========================================================= */
 
 function createCard(movie) {
 
   const card =
-    document.createElement("article");
+    document.createElement(
+      "article"
+    );
 
-  card.className = "video-card";
 
-  card.dataset.id = movie.id;
+  card.className =
+    "video-card";
+
+
+  card.dataset.id =
+    movie.id;
 
 
   const safeTitle =
-    escapeHTML(movie.title);
+    escapeHTML(
+      movie.title
+    );
+
 
   const safeGenre =
-    escapeHTML(movie.genre);
+    escapeHTML(
+      movie.genre
+    );
 
-  const safeType =
-    movie.type === "series"
-      ? "Series"
-      : "Film";
+
+  const safeRating =
+    escapeHTML(
+      movie.rating
+    );
 
 
   card.innerHTML = `
+
     <div class="card-video">
 
       <video
@@ -307,18 +621,23 @@ function createCard(movie) {
         <span>•</span>
 
         <span class="card-rating">
-          ★ ${escapeHTML(movie.rating)}
+          ★ ${safeRating}
         </span>
 
       </div>
 
     </div>
+
   `;
 
 
   const video =
-    card.querySelector("video");
+    card.querySelector(
+      "video"
+    );
 
+
+  /* ================= CARD CLICK ================= */
 
   card.addEventListener(
     "click",
@@ -330,25 +649,35 @@ function createCard(movie) {
   );
 
 
+  /* ================= HOVER PLAY ================= */
+
   card.addEventListener(
     "mouseenter",
     function () {
 
-      if (!video.src) {
+      if (
+        !video.src &&
+        !video._redflixHls
+      ) {
+
         loadVideo(
           video,
           movie.video,
           false
         );
+
       }
+
 
       video
         .play()
-        .catch(() => {});
+        .catch(function () {});
 
     }
   );
 
+
+  /* ================= HOVER STOP ================= */
 
   card.addEventListener(
     "mouseleave",
@@ -356,8 +685,12 @@ function createCard(movie) {
 
       video.pause();
 
+
       try {
-        video.currentTime = 0;
+
+        video.currentTime =
+          0;
+
       } catch (error) {}
 
     }
@@ -369,46 +702,66 @@ function createCard(movie) {
 
 
 /* =========================================================
-   RENDER
+   RENDER MOVIES
    ========================================================= */
 
 function renderMovies(list) {
 
-  movieGrid.innerHTML = "";
-  seriesGrid.innerHTML = "";
+  if (!movieGrid || !seriesGrid) {
+    return;
+  }
 
 
-  let movieCount = 0;
-  let seriesCount = 0;
+  movieGrid.innerHTML =
+    "";
+
+  seriesGrid.innerHTML =
+    "";
 
 
-  list.forEach(function (movie) {
+  let movieCount =
+    0;
 
-    const card =
-      createCard(movie);
+  let seriesCount =
+    0;
 
 
-    if (movie.type === "series") {
+  list.forEach(
+    function (movie) {
 
-      seriesGrid.appendChild(card);
+      const card =
+        createCard(movie);
 
-      seriesCount++;
 
-    } else {
+      if (
+        movie.type === "series"
+      ) {
 
-      movieGrid.appendChild(card);
+        seriesGrid.appendChild(
+          card
+        );
 
-      movieCount++;
+        seriesCount++;
+
+      } else {
+
+        movieGrid.appendChild(
+          card
+        );
+
+        movieCount++;
+
+      }
 
     }
-
-  });
+  );
 
 
   const movieSection =
     movieGrid.closest(
       ".catalog-section"
     );
+
 
   const seriesSection =
     seriesGrid.closest(
@@ -436,10 +789,15 @@ function renderMovies(list) {
   }
 
 
-  emptyState.classList.toggle(
-    "hidden",
-    list.length !== 0
-  );
+  if (emptyState) {
+
+    emptyState.classList.toggle(
+      "hidden",
+      list.length !== 0
+    );
+
+  }
+
 }
 
 
@@ -449,9 +807,24 @@ function renderMovies(list) {
 
 function setupHero() {
 
+  if (
+    !heroVideo ||
+    !heroTitle ||
+    !heroDescription
+  ) {
+
+    return;
+
+  }
+
+
   const featured =
     movies.find(
-      movie => movie.featured
+      function (movie) {
+
+        return movie.featured;
+
+      }
     ) || movies[0];
 
 
@@ -462,6 +835,7 @@ function setupHero() {
 
   heroTitle.textContent =
     featured.title;
+
 
   heroDescription.textContent =
     featured.description;
@@ -475,73 +849,130 @@ function setupHero() {
     );
 
 
-  heroPlayBtn.onclick =
-    function () {
+  if (heroPlayBtn) {
 
-      openPlayer(featured);
+    heroPlayBtn.onclick =
+      function () {
 
-    };
+        openPlayer(
+          featured
+        );
+
+      };
+
+  }
 
 
-  heroInfoBtn.onclick =
-    function () {
+  if (heroInfoBtn) {
 
-      openDetail(featured);
+    heroInfoBtn.onclick =
+      function () {
 
-    };
+        openDetail(
+          featured
+        );
+
+      };
+
+  }
 
 }
 
 
 /* =========================================================
-   DETAIL
+   OPEN DETAIL
    ========================================================= */
 
 function openDetail(movie) {
 
-  if (!movie) {
+  if (
+    !movie ||
+    !detailModal
+  ) {
+
     return;
+
   }
 
 
-  currentMovie = movie;
+  currentMovie =
+    movie;
 
 
-  detailTitle.textContent =
-    movie.title;
+  if (detailTitle) {
 
-  detailYear.textContent =
-    movie.year;
+    detailTitle.textContent =
+      movie.title;
 
-  detailRating.textContent =
-    `★ ${movie.rating}`;
-
-  detailGenre.textContent =
-    movie.genre;
-
-  detailType.textContent =
-    movie.type === "series"
-      ? "SERIES"
-      : "MOVIE";
-
-  detailDescription.textContent =
-    movie.description;
-
-  detailCast.textContent =
-    movie.cast;
+  }
 
 
-  detailHls =
-    loadVideo(
-      detailVideo,
-      movie.video,
-      false
-    );
+  if (detailYear) {
+
+    detailYear.textContent =
+      movie.year;
+
+  }
+
+
+  if (detailRating) {
+
+    detailRating.textContent =
+      `★ ${movie.rating}`;
+
+  }
+
+
+  if (detailGenre) {
+
+    detailGenre.textContent =
+      movie.genre;
+
+  }
+
+
+  if (detailType) {
+
+    detailType.textContent =
+      movie.type === "series"
+        ? "SERIES"
+        : "MOVIE";
+
+  }
+
+
+  if (detailDescription) {
+
+    detailDescription.textContent =
+      movie.description;
+
+  }
+
+
+  if (detailCast) {
+
+    detailCast.textContent =
+      movie.cast;
+
+  }
+
+
+  if (detailVideo) {
+
+    detailHls =
+      loadVideo(
+        detailVideo,
+        movie.video,
+        false
+      );
+
+  }
 
 
   detailModal.classList.remove(
     "hidden"
   );
+
 
   detailModal.setAttribute(
     "aria-hidden",
@@ -551,28 +982,32 @@ function openDetail(movie) {
 
   document.body.style.overflow =
     "hidden";
+
 }
 
 
 /* =========================================================
-   PLAYER
+   OPEN PLAYER
    ========================================================= */
 
 function openPlayer(movie) {
 
-  if (!movie) {
+  if (
+    !movie ||
+    !playerModal ||
+    !mainPlayer
+  ) {
+
     return;
+
   }
 
 
-  currentMovie = movie;
+  currentMovie =
+    movie;
 
 
-  /*
-   * Popup dibuka langsung dari event klik.
-   * Jangan dibungkus setTimeout agar browser
-   * tidak menganggapnya sebagai popup otomatis.
-   */
+  /* ================= IKLAN ================= */
 
   try {
 
@@ -592,14 +1027,23 @@ function openPlayer(movie) {
   }
 
 
-  playerError.classList.add(
-    "hidden"
-  );
+  /* ================= RESET ERROR ================= */
 
+  if (playerError) {
+
+    playerError.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  /* ================= OPEN PLAYER ================= */
 
   playerModal.classList.remove(
     "hidden"
   );
+
 
   playerModal.setAttribute(
     "aria-hidden",
@@ -611,12 +1055,15 @@ function openPlayer(movie) {
     "hidden";
 
 
+  /* ================= LOAD VIDEO ================= */
+
   mainHls =
     loadVideo(
       mainPlayer,
       movie.video,
       true
     );
+
 }
 
 
@@ -634,6 +1081,7 @@ function closeDetail() {
   detailModal.classList.add(
     "hidden"
   );
+
 
   detailModal.setAttribute(
     "aria-hidden",
@@ -655,13 +1103,17 @@ function closeDetail() {
 
 
   detailHls =
-    destroyHls(detailHls);
+    destroyHls(
+      detailHls
+    );
 
 
-  currentMovie = null;
+  currentMovie =
+    null;
 
 
   if (
+    playerModal &&
     playerModal.classList.contains(
       "hidden"
     )
@@ -671,6 +1123,7 @@ function closeDetail() {
       "";
 
   }
+
 }
 
 
@@ -688,6 +1141,7 @@ function closePlayer() {
   playerModal.classList.add(
     "hidden"
   );
+
 
   playerModal.setAttribute(
     "aria-hidden",
@@ -709,14 +1163,18 @@ function closePlayer() {
 
 
   mainHls =
-    destroyHls(mainHls);
+    destroyHls(
+      mainHls
+    );
 
 
   document.body.style.overflow =
     "";
 
 
-  currentMovie = null;
+  currentMovie =
+    null;
+
 }
 
 
@@ -724,31 +1182,36 @@ function closePlayer() {
    DETAIL PLAY
    ========================================================= */
 
-detailPlayBtn.addEventListener(
-  "click",
-  function () {
+if (detailPlayBtn) {
 
-    if (!currentMovie) {
-      return;
+  detailPlayBtn.addEventListener(
+    "click",
+    function () {
+
+      if (!currentMovie) {
+        return;
+      }
+
+
+      const movie =
+        currentMovie;
+
+
+      /*
+       * Jangan gunakan setTimeout.
+       * openPlayer langsung berasal dari
+       * event click sehingga window.open
+       * lebih mungkin diizinkan browser.
+       */
+
+      closeDetail();
+
+      openPlayer(movie);
+
     }
+  );
 
-
-    /*
-     * Penting:
-     * openPlayer dipanggil langsung dari click
-     * supaya window.open tidak mudah diblokir.
-     */
-
-    const movie =
-      currentMovie;
-
-
-    closeDetail();
-
-    openPlayer(movie);
-
-  }
-);
+}
 
 
 /* =========================================================
@@ -779,68 +1242,95 @@ document
    PLAYER CLOSE
    ========================================================= */
 
-playerClose.addEventListener(
-  "click",
-  function () {
+if (playerClose) {
 
-    closePlayer();
+  playerClose.addEventListener(
+    "click",
+    function () {
 
-  }
-);
+      closePlayer();
+
+    }
+  );
+
+}
 
 
 /* =========================================================
    PLAYER ERROR
    ========================================================= */
 
-mainPlayer.addEventListener(
-  "error",
-  function () {
+if (mainPlayer) {
 
-    playerError.classList.remove(
-      "hidden"
-    );
+  mainPlayer.addEventListener(
+    "error",
+    function () {
 
-  }
-);
+      console.error(
+        "HTML5 video error:",
+        mainPlayer.error
+      );
 
 
-/* =========================================================
-   BACKDROP
-   ========================================================= */
+      if (playerError) {
 
-detailModal.addEventListener(
-  "click",
-  function (event) {
+        playerError.classList.remove(
+          "hidden"
+        );
 
-    if (
-      event.target.classList.contains(
-        "modal-backdrop"
-      )
-    ) {
-
-      closeDetail();
+      }
 
     }
+  );
 
-  }
-);
+}
 
 
 /* =========================================================
-   ESCAPE
+   BACKDROP DETAIL
+   ========================================================= */
+
+if (detailModal) {
+
+  detailModal.addEventListener(
+    "click",
+    function (event) {
+
+      if (
+        event.target.classList.contains(
+          "modal-backdrop"
+        )
+      ) {
+
+        closeDetail();
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   ESCAPE KEY
    ========================================================= */
 
 document.addEventListener(
   "keydown",
   function (event) {
 
-    if (event.key !== "Escape") {
+    if (
+      event.key !== "Escape"
+    ) {
+
       return;
+
     }
 
 
     if (
+      playerModal &&
       !playerModal.classList.contains(
         "hidden"
       )
@@ -854,6 +1344,7 @@ document.addEventListener(
 
 
     if (
+      detailModal &&
       !detailModal.classList.contains(
         "hidden"
       )
@@ -871,56 +1362,62 @@ document.addEventListener(
    SEARCH
    ========================================================= */
 
-searchInput.addEventListener(
-  "input",
-  function () {
+if (searchInput) {
 
-    const keyword =
-      searchInput.value
-        .trim()
-        .toLowerCase();
+  searchInput.addEventListener(
+    "input",
+    function () {
 
-
-    const filtered =
-      movies.filter(
-        function (movie) {
-
-          const searchable =
-            [
-              movie.title,
-              movie.genre,
-              movie.description,
-              movie.cast,
-              movie.year
-            ]
-              .join(" ")
-              .toLowerCase();
+      const keyword =
+        searchInput.value
+          .trim()
+          .toLowerCase();
 
 
-          const matchesSearch =
-            searchable.includes(
-              keyword
+      const filtered =
+        movies.filter(
+          function (movie) {
+
+            const searchable =
+              [
+                movie.title,
+                movie.genre,
+                movie.description,
+                movie.cast,
+                movie.year
+              ]
+                .join(" ")
+                .toLowerCase();
+
+
+            const matchesSearch =
+              searchable.includes(
+                keyword
+              );
+
+
+            const matchesFilter =
+              currentFilter === "all" ||
+              movie.type === currentFilter;
+
+
+            return (
+              matchesSearch &&
+              matchesFilter
             );
 
-
-          const matchesFilter =
-            currentFilter === "all" ||
-            movie.type === currentFilter;
+          }
+        );
 
 
-          return (
-            matchesSearch &&
-            matchesFilter
-          );
-
-        }
+      renderMovies(
+        filtered
       );
 
+    }
+  );
 
-    renderMovies(filtered);
-
-  }
-);
+}
 
 
 /* =========================================================
@@ -963,9 +1460,11 @@ document
 
 
           const keyword =
-            searchInput.value
-              .trim()
-              .toLowerCase();
+            searchInput
+              ? searchInput.value
+                  .trim()
+                  .toLowerCase()
+              : "";
 
 
           const filtered =
@@ -1004,7 +1503,9 @@ document
             );
 
 
-          renderMovies(filtered);
+          renderMovies(
+            filtered
+          );
 
         }
       );
@@ -1019,23 +1520,30 @@ document
 
 function escapeHTML(value) {
 
-  return String(value ?? "")
+  return String(
+    value ?? ""
+  )
+
     .replace(
       /&/g,
       "&amp;"
     )
+
     .replace(
       /</g,
       "&lt;"
     )
+
     .replace(
       />/g,
       "&gt;"
     )
+
     .replace(
       /"/g,
       "&quot;"
     )
+
     .replace(
       /'/g,
       "&#039;"
@@ -1045,7 +1553,7 @@ function escapeHTML(value) {
 
 
 /* =========================================================
-   CLEANUP VIDEO WHEN PAGE HIDDEN
+   PAGE VISIBILITY
    ========================================================= */
 
 document.addEventListener(
@@ -1069,6 +1577,8 @@ document.addEventListener(
    INITIALIZE
    ========================================================= */
 
-renderMovies(movies);
+renderMovies(
+  movies
+);
 
 setupHero();
