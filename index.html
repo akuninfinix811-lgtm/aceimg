@@ -4,127 +4,127 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title id="page-title">RedFlix</title>
+  <title id="page-title">RedFlix Stream</title>
 
   <link rel="stylesheet" href="style.css">
-
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 
 <body>
 
-  <!-- ================= HEADER ================= -->
-  <header class="header">
-    <div class="header-inner">
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+  <header class="site-header">
 
-      <div class="logo">
-        Red<span>Flix</span>
-      </div>
-
-      <div class="search-wrapper">
-        <input
-          type="search"
-          id="searchInput"
-          class="search-input"
-          placeholder="Cari film..."
-          autocomplete="off"
-        >
-      </div>
-
+    <div class="logo">
+      RED<span>FLIX</span>
     </div>
+
+    <div class="search-box">
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Cari film atau series..."
+        autocomplete="off"
+      >
+    </div>
+
   </header>
 
 
-  <!-- ================= HERO ================= -->
+  <!-- =====================================================
+       HERO
+  ====================================================== -->
   <section class="hero">
 
-    <div class="hero-media">
-      <video
-        id="heroVideo"
-        muted
-        playsinline
-        preload="metadata"
-      ></video>
+    <video
+      id="heroVideo"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+    ></video>
 
-      <div class="hero-gradient"></div>
-    </div>
+    <div class="hero-overlay"></div>
 
     <div class="hero-content">
 
-      <div class="featured-label">
-        FEATURED
-      </div>
-
-      <h1 id="heroTitle">
-        RedFlix
-      </h1>
+      <h1 id="heroTitle">RedFlix</h1>
 
       <p id="heroDescription">
-        Temukan film dan series pilihanmu.
+        Saksikan video pilihan terbaru.
       </p>
 
-      <div class="hero-actions">
+      <div class="hero-buttons">
 
         <button
           type="button"
-          class="btn btn-red"
           id="heroPlayBtn"
+          class="btn btn-primary"
         >
-          ▶ Play
+          ▶ Putar
         </button>
 
         <button
           type="button"
-          class="btn btn-dark"
           id="heroInfoBtn"
+          class="btn btn-secondary"
         >
-          ℹ Info
+          ⓘ Info
         </button>
 
       </div>
 
     </div>
+
   </section>
 
 
-  <!-- ================= CONTENT ================= -->
+  <!-- =====================================================
+       FILTER
+  ====================================================== -->
+  <div class="filter-container">
+
+    <button
+      type="button"
+      class="filter-btn active"
+      data-filter="all"
+    >
+      Semua
+    </button>
+
+    <button
+      type="button"
+      class="filter-btn"
+      data-filter="movie"
+    >
+      Film
+    </button>
+
+    <button
+      type="button"
+      class="filter-btn"
+      data-filter="series"
+    >
+      Series
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       CONTENT
+  ====================================================== -->
   <main class="content">
 
-    <div class="filter-bar">
+    <!-- FILM -->
+    <section
+      id="movieSection"
+      class="content-section"
+    >
 
-      <button
-        type="button"
-        class="filter-btn active"
-        data-filter="all"
-      >
-        Semua
-      </button>
-
-      <button
-        type="button"
-        class="filter-btn"
-        data-filter="movie"
-      >
-        Film
-      </button>
-
-      <button
-        type="button"
-        class="filter-btn"
-        data-filter="series"
-      >
-        Series
-      </button>
-
-    </div>
-
-
-    <!-- ================= MOVIES ================= -->
-    <section class="catalog-section">
-
-      <div class="section-heading">
-        <h2>Film</h2>
-      </div>
+      <h2>Film</h2>
 
       <div
         id="movieGrid"
@@ -134,12 +134,13 @@
     </section>
 
 
-    <!-- ================= SERIES ================= -->
-    <section class="catalog-section">
+    <!-- SERIES -->
+    <section
+      id="seriesSection"
+      class="content-section"
+    >
 
-      <div class="section-heading">
-        <h2>Series</h2>
-      </div>
+      <h2>Series</h2>
 
       <div
         id="seriesGrid"
@@ -149,28 +150,24 @@
     </section>
 
 
-    <!-- ================= EMPTY ================= -->
+    <!-- EMPTY -->
     <div
       id="emptyState"
       class="empty-state hidden"
     >
-      <div class="empty-icon">×</div>
-
-      <h3>Tidak ditemukan</h3>
-
-      <p>
-        Film atau series yang kamu cari tidak tersedia.
-      </p>
+      <h3>Video tidak ditemukan</h3>
+      <p>Coba gunakan kata kunci lain.</p>
     </div>
 
   </main>
 
 
-  <!-- ================= DETAIL MODAL ================= -->
+  <!-- =====================================================
+       DETAIL MODAL
+  ====================================================== -->
   <div
     id="detailModal"
     class="modal hidden"
-    aria-hidden="true"
   >
 
     <div
@@ -178,7 +175,7 @@
       data-close-detail
     ></div>
 
-    <div class="detail-modal">
+    <div class="detail-modal-content">
 
       <button
         type="button"
@@ -189,68 +186,55 @@
         ×
       </button>
 
-      <div class="detail-video">
+      <div class="detail-video-container">
 
         <video
           id="detailVideo"
           muted
           playsinline
-          preload="metadata"
           controls
+          preload="metadata"
         ></video>
 
       </div>
 
-      <div class="detail-body">
-
-        <span
-          id="detailType"
-          class="badge"
-        >
-          MOVIE
-        </span>
+      <div class="detail-content">
 
         <h2 id="detailTitle">
-          -
+          Judul
         </h2>
 
         <div class="detail-meta">
 
-          <span id="detailYear">
-            -
-          </span>
+          <span id="detailYear"></span>
 
           <span>•</span>
 
-          <span id="detailRating">
-            -
-          </span>
+          <span id="detailGenre"></span>
 
           <span>•</span>
 
-          <span id="detailGenre">
-            -
-          </span>
+          <span id="detailRating"></span>
+
+          <span>•</span>
+
+          <span id="detailType"></span>
 
         </div>
 
-        <p id="detailDescription">
-          -
-        </p>
+        <p id="detailDescription"></p>
 
-        <div class="cast">
+        <p>
           <strong>Pemeran:</strong>
-          <span id="detailCast">
-            -
-          </span>
-        </div>
+          <span id="detailCast">-</span>
+        </p>
 
         <button
           type="button"
-          class="btn btn-red"
           id="detailPlayBtn"
+          class="btn btn-primary"
         >
-          ▶ Play Sekarang
+          ▶ Putar Sekarang
         </button>
 
       </div>
@@ -260,11 +244,12 @@
   </div>
 
 
-  <!-- ================= PLAYER MODAL ================= -->
+  <!-- =====================================================
+       PLAYER MODAL
+  ====================================================== -->
   <div
     id="playerModal"
     class="player-modal hidden"
-    aria-hidden="true"
   >
 
     <button
@@ -276,14 +261,33 @@
       ×
     </button>
 
-    <div class="player-box">
 
-      <video
-        id="mainPlayer"
-        controls
-        playsinline
-        preload="metadata"
-      ></video>
+    <div class="player-container">
+
+      <!-- VIDEO + OVERLAY -->
+      <div class="player-video-wrap">
+
+        <video
+          id="mainPlayer"
+          controls
+          playsinline
+          preload="metadata"
+        ></video>
+
+
+        <!--
+          Overlay transparan.
+          Klik pertama membuka iklan.
+          Setelah itu overlay hilang.
+        -->
+        <div
+          id="ad-overlay"
+          role="button"
+          aria-label="Lanjutkan ke video"
+        ></div>
+
+      </div>
+
 
       <div
         id="playerError"
@@ -297,25 +301,15 @@
   </div>
 
 
-  <!-- ================= FOOTER ================= -->
-  <footer class="footer">
+  <!-- =====================================================
+       HLS.JS
+  ====================================================== -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-    <div class="footer-inner">
-
-      <div class="footer-logo">
-        Red<span>Flix</span>
-      </div>
-
-      <p>
-        © 2026 RedFlix. All rights reserved.
-      </p>
-
-    </div>
-
-  </footer>
-
-
+  <!-- DATA VIDEO -->
   <script src="movie.js"></script>
+
+  <!-- MAIN SCRIPT -->
   <script src="script.js"></script>
 
 </body>
