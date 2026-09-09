@@ -2,116 +2,231 @@
    REDFLIX
 ========================================================= */
 
-/* ================= IKLAN ================= */
+
+/* =========================================================
+   IKLAN
+========================================================= */
+
 const SHOPEE_AD_URL =
   "https://s.shopee.co.id/4qFQYYdc3C";
 
 
-/* ================= ELEMENT ================= */
-const movieGrid = document.getElementById("movieGrid");
-const seriesGrid = document.getElementById("seriesGrid");
-const movieSection = document.getElementById("movieSection");
-const seriesSection = document.getElementById("seriesSection");
-const searchInput = document.getElementById("searchInput");
-const emptyState = document.getElementById("emptyState");
+/* =========================================================
+   ELEMENT
+========================================================= */
 
-const heroVideo = document.getElementById("heroVideo");
-const heroTitle = document.getElementById("heroTitle");
-const heroDescription = document.getElementById("heroDescription");
-const heroPlayBtn = document.getElementById("heroPlayBtn");
-const heroInfoBtn = document.getElementById("heroInfoBtn");
+const movieGrid =
+  document.getElementById("movieGrid");
 
-const detailModal = document.getElementById("detailModal");
-const detailVideo = document.getElementById("detailVideo");
+const seriesGrid =
+  document.getElementById("seriesGrid");
 
-const playerModal = document.getElementById("playerModal");
-const mainPlayer = document.getElementById("mainPlayer");
-const playerError = document.getElementById("playerError");
-const playerClose = document.getElementById("playerClose");
-const detailPlayBtn = document.getElementById("detailPlayBtn");
+const movieSection =
+  document.getElementById("movieSection");
+
+const seriesSection =
+  document.getElementById("seriesSection");
+
+const searchInput =
+  document.getElementById("searchInput");
+
+const emptyState =
+  document.getElementById("emptyState");
+
+const heroVideo =
+  document.getElementById("heroVideo");
+
+const heroTitle =
+  document.getElementById("heroTitle");
+
+const heroDescription =
+  document.getElementById("heroDescription");
+
+const heroPlayBtn =
+  document.getElementById("heroPlayBtn");
+
+const heroInfoBtn =
+  document.getElementById("heroInfoBtn");
+
+const detailModal =
+  document.getElementById("detailModal");
+
+const detailVideo =
+  document.getElementById("detailVideo");
+
+const playerModal =
+  document.getElementById("playerModal");
+
+const mainPlayer =
+  document.getElementById("mainPlayer");
+
+const playerError =
+  document.getElementById("playerError");
+
+const playerClose =
+  document.getElementById("playerClose");
+
+const detailPlayBtn =
+  document.getElementById("detailPlayBtn");
+
+const adOverlay =
+  document.getElementById("ad-overlay");
 
 
-/* ================= STATE ================= */
+/* =========================================================
+   STATE
+========================================================= */
+
 let currentMovie = null;
 let currentHls = null;
+let adOpened = false;
 
 
-/* ================= VIDEO ================= */
-function loadVideo(videoElement, url, autoplay = false) {
-  if (!videoElement || !url) return;
+/* =========================================================
+   LOAD VIDEO
+========================================================= */
+
+function loadVideo(
+  videoElement,
+  url,
+  autoplay = false
+) {
+
+  if (!videoElement || !url) {
+    return;
+  }
+
 
   videoElement.pause();
+
   videoElement.removeAttribute("src");
+
   videoElement.load();
 
-  /* MP4 / WEBM */
+
+  /* =======================================================
+     MP4 / WEBM
+  ======================================================== */
+
   if (!url.includes(".m3u8")) {
+
     videoElement.src = url;
 
     if (autoplay) {
-      videoElement.play().catch(() => {});
+
+      videoElement
+        .play()
+        .catch(() => {});
+
     }
 
     return;
   }
 
-  /* Native HLS */
+
+  /* =======================================================
+     NATIVE HLS
+  ======================================================== */
+
   if (
     videoElement.canPlayType(
       "application/vnd.apple.mpegurl"
     )
   ) {
+
     videoElement.src = url;
 
     if (autoplay) {
-      videoElement.play().catch(() => {});
+
+      videoElement
+        .play()
+        .catch(() => {});
+
     }
 
     return;
   }
 
-  /* HLS.JS */
+
+  /* =======================================================
+     HLS.JS
+  ======================================================== */
+
   if (
     typeof Hls !== "undefined" &&
     Hls.isSupported()
   ) {
+
     if (currentHls) {
+
       currentHls.destroy();
+
       currentHls = null;
     }
 
+
     currentHls = new Hls();
 
+
     currentHls.loadSource(url);
-    currentHls.attachMedia(videoElement);
+
+
+    currentHls.attachMedia(
+      videoElement
+    );
+
 
     currentHls.on(
       Hls.Events.MANIFEST_PARSED,
       () => {
+
         if (autoplay) {
-          videoElement.play().catch(() => {});
+
+          videoElement
+            .play()
+            .catch(() => {});
+
         }
+
       }
     );
+
 
     currentHls.on(
       Hls.Events.ERROR,
       (event, data) => {
-        console.error("HLS error:", data);
+
+        console.error(
+          "HLS error:",
+          data
+        );
+
       }
     );
+
   }
+
 }
 
 
-/* ================= CARD ================= */
-function createCard(movie) {
-  const card = document.createElement("article");
+/* =========================================================
+   CREATE CARD
+========================================================= */
 
-  card.className = "video-card";
+function createCard(movie) {
+
+  const card =
+    document.createElement("article");
+
+
+  card.className =
+    "video-card";
+
 
   card.innerHTML = `
+
     <div class="card-video">
+
       <video
         muted
         loop
@@ -119,109 +234,203 @@ function createCard(movie) {
         preload="metadata"
       ></video>
 
-      <div class="card-play">▶</div>
+      <div class="card-play">
+        ▶
+      </div>
+
     </div>
 
+
     <div class="card-info">
+
       <h3 class="card-title">
         ${escapeHTML(movie.title)}
       </h3>
 
+
       <div class="card-meta">
-        <span>${movie.year}</span>
+
+        <span>
+          ${movie.year}
+        </span>
+
         <span>•</span>
-        <span>${escapeHTML(movie.genre)}</span>
+
+        <span>
+          ${escapeHTML(movie.genre)}
+        </span>
+
         <span>•</span>
+
         <span class="card-rating">
           ★ ${escapeHTML(movie.rating)}
         </span>
+
       </div>
+
     </div>
+
   `;
 
-  const video = card.querySelector("video");
 
-  loadVideo(video, movie.video);
+  const video =
+    card.querySelector("video");
 
-  card.addEventListener("mouseenter", () => {
-    video.currentTime = 0;
-    video.play().catch(() => {});
-  });
 
-  card.addEventListener("mouseleave", () => {
-    video.pause();
+  loadVideo(
+    video,
+    movie.video
+  );
 
-    try {
+
+  /* =======================================================
+     DESKTOP HOVER
+  ======================================================== */
+
+  card.addEventListener(
+    "mouseenter",
+    () => {
+
       video.currentTime = 0;
-    } catch (e) {}
-  });
 
-  card.addEventListener("click", () => {
-    openDetail(movie);
-  });
+      video
+        .play()
+        .catch(() => {});
+
+    }
+  );
+
+
+  card.addEventListener(
+    "mouseleave",
+    () => {
+
+      video.pause();
+
+      try {
+
+        video.currentTime = 0;
+
+      } catch (error) {}
+
+    }
+  );
+
+
+  /* =======================================================
+     DETAIL
+  ======================================================== */
+
+  card.addEventListener(
+    "click",
+    () => {
+
+      openDetail(movie);
+
+    }
+  );
+
 
   return card;
 }
 
 
-/* ================= RENDER ================= */
+/* =========================================================
+   RENDER MOVIES
+========================================================= */
+
 function renderMovies(list) {
+
   movieGrid.innerHTML = "";
+
   seriesGrid.innerHTML = "";
 
-  const filmList = list.filter(
-    movie => movie.type === "movie"
+
+  const filmList =
+    list.filter(
+      movie =>
+        movie.type === "movie"
+    );
+
+
+  const seriesList =
+    list.filter(
+      movie =>
+        movie.type === "series"
+    );
+
+
+  filmList.forEach(
+    movie => {
+
+      movieGrid.appendChild(
+        createCard(movie)
+      );
+
+    }
   );
 
-  const seriesList = list.filter(
-    movie => movie.type === "series"
+
+  seriesList.forEach(
+    movie => {
+
+      seriesGrid.appendChild(
+        createCard(movie)
+      );
+
+    }
   );
 
-  filmList.forEach(movie => {
-    movieGrid.appendChild(
-      createCard(movie)
-    );
-  });
-
-  seriesList.forEach(movie => {
-    seriesGrid.appendChild(
-      createCard(movie)
-    );
-  });
 
   movieSection.classList.toggle(
     "hidden",
     filmList.length === 0
   );
 
+
   seriesSection.classList.toggle(
     "hidden",
     seriesList.length === 0
   );
 
+
   emptyState.classList.toggle(
     "hidden",
     list.length > 0
   );
+
 }
 
 
-/* ================= HERO ================= */
+/* =========================================================
+   HERO
+========================================================= */
+
 function setupHero() {
+
   const featured =
     movies.find(
-      movie => movie.featured === true
+      movie =>
+        movie.featured === true
     ) || movies[0];
 
-  if (!featured) return;
 
-  currentMovie = featured;
+  if (!featured) {
+    return;
+  }
+
+
+  currentMovie =
+    featured;
+
 
   heroTitle.textContent =
     featured.title;
 
+
   heroDescription.textContent =
     featured.description;
+
 
   loadVideo(
     heroVideo,
@@ -229,36 +438,62 @@ function setupHero() {
     true
   );
 
-  heroPlayBtn.onclick = () => {
-    openPlayer(featured);
-  };
 
-  heroInfoBtn.onclick = () => {
-    openDetail(featured);
-  };
+  heroPlayBtn.onclick =
+    () => {
+
+      openPlayer(
+        featured
+      );
+
+    };
+
+
+  heroInfoBtn.onclick =
+    () => {
+
+      openDetail(
+        featured
+      );
+
+    };
+
 }
 
 
-/* ================= DETAIL ================= */
+/* =========================================================
+   DETAIL
+========================================================= */
+
 function openDetail(movie) {
-  currentMovie = movie;
+
+  currentMovie =
+    movie;
+
 
   document.getElementById(
     "detailTitle"
-  ).textContent = movie.title;
+  ).textContent =
+    movie.title;
+
 
   document.getElementById(
     "detailYear"
-  ).textContent = movie.year;
+  ).textContent =
+    movie.year;
+
 
   document.getElementById(
     "detailGenre"
-  ).textContent = movie.genre;
+  ).textContent =
+    movie.genre;
+
 
   document.getElementById(
     "detailRating"
   ).textContent =
     `★ ${movie.rating}`;
+
 
   document.getElementById(
     "detailType"
@@ -267,148 +502,146 @@ function openDetail(movie) {
       ? "SERIES"
       : "FILM";
 
+
   document.getElementById(
     "detailDescription"
   ).textContent =
     movie.description;
+
 
   document.getElementById(
     "detailCast"
   ).textContent =
     movie.cast || "-";
 
+
   loadVideo(
     detailVideo,
     movie.video
   );
 
+
   detailModal.classList.remove(
     "hidden"
   );
 
+
   document.body.style.overflow =
     "hidden";
+
 }
 
 
 /* =========================================================
-   PLAYER
+   OPEN PLAYER
 ========================================================= */
-function openPlayer(movie) {
-  currentMovie = movie;
 
+function openPlayer(movie) {
+
+  currentMovie =
+    movie;
+
+
+  /* Reset error */
   playerError.classList.add(
     "hidden"
   );
+
+
+  /* =======================================================
+     RESET IKLAN
+  ======================================================== */
+
+  adOpened = false;
+
+
+  if (adOverlay) {
+
+    adOverlay.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+  /* =======================================================
+     BUKA PLAYER
+  ======================================================== */
 
   playerModal.classList.remove(
     "hidden"
   );
 
+
   document.body.style.overflow =
     "hidden";
+
+
+  /* =======================================================
+     LOAD VIDEO
+  ======================================================== */
 
   loadVideo(
     mainPlayer,
     movie.video,
     true
   );
+
 }
 
 
 /* =========================================================
-   IKLAN VIDEO
-   Klik/tap video = buka Shopee
-   Swipe/scroll = tidak membuka iklan
+   IKLAN OVERLAY
 ========================================================= */
 
-let videoPointerDownX = 0;
-let videoPointerDownY = 0;
-let videoPointerMoved = false;
+if (adOverlay) {
 
-if (mainPlayer) {
-
-  mainPlayer.addEventListener(
-    "pointerdown",
-    event => {
-
-      videoPointerDownX =
-        event.clientX;
-
-      videoPointerDownY =
-        event.clientY;
-
-      videoPointerMoved = false;
-    },
-    {
-      passive: true
-    }
-  );
-
-
-  mainPlayer.addEventListener(
-    "pointermove",
-    event => {
-
-      const moveX =
-        Math.abs(
-          event.clientX -
-          videoPointerDownX
-        );
-
-      const moveY =
-        Math.abs(
-          event.clientY -
-          videoPointerDownY
-        );
-
-      /*
-       * Kalau jari bergerak cukup jauh,
-       * anggap sebagai swipe/scroll.
-       */
-      if (
-        moveX > 10 ||
-        moveY > 10
-      ) {
-        videoPointerMoved = true;
-      }
-    },
-    {
-      passive: true
-    }
-  );
-
-
-  mainPlayer.addEventListener(
+  adOverlay.addEventListener(
     "click",
-    event => {
+    function () {
 
-      /*
-       * Jangan buka iklan kalau tadi
-       * merupakan swipe/scroll.
-       */
-      if (videoPointerMoved) {
+      if (adOpened) {
         return;
       }
 
 
+      adOpened = true;
+
+
       /*
-       * Buka iklan karena user memang
-       * melakukan klik/tap langsung
-       * pada area video.
+       * Buka iklan langsung dari
+       * aksi klik user.
        */
+
       window.open(
         SHOPEE_AD_URL,
         "_blank",
         "noopener,noreferrer"
       );
+
+
+      /*
+       * Hilangkan overlay setelah
+       * klik pertama.
+       */
+
+      adOverlay.classList.add(
+        "hidden"
+      );
+
+    },
+    {
+      once: true
     }
   );
 
 }
 
 
-/* ================= CLOSE DETAIL ================= */
+/* =========================================================
+   CLOSE DETAIL
+========================================================= */
+
 function closeDetail() {
 
   if (detailVideo) {
@@ -420,18 +653,25 @@ function closeDetail() {
     );
 
     detailVideo.load();
+
   }
+
 
   detailModal.classList.add(
     "hidden"
   );
 
+
   document.body.style.overflow =
     "";
+
 }
 
 
-/* ================= CLOSE PLAYER ================= */
+/* =========================================================
+   CLOSE PLAYER
+========================================================= */
+
 function closePlayer() {
 
   if (mainPlayer) {
@@ -443,6 +683,7 @@ function closePlayer() {
     );
 
     mainPlayer.load();
+
   }
 
 
@@ -451,6 +692,7 @@ function closePlayer() {
     currentHls.destroy();
 
     currentHls = null;
+
   }
 
 
@@ -458,44 +700,61 @@ function closePlayer() {
     "hidden"
   );
 
+
   document.body.style.overflow =
     "";
+
 }
 
 
-/* ================= DETAIL CLOSE ================= */
+/* =========================================================
+   CLOSE DETAIL BUTTON
+========================================================= */
+
 document
   .querySelectorAll(
     "[data-close-detail]"
   )
-  .forEach(element => {
+  .forEach(
+    element => {
 
-    element.addEventListener(
-      "click",
-      closeDetail
-    );
+      element.addEventListener(
+        "click",
+        closeDetail
+      );
 
-  });
+    }
+  );
 
 
-/* ================= DETAIL PLAY ================= */
+/* =========================================================
+   DETAIL PLAY
+========================================================= */
+
 if (detailPlayBtn) {
 
   detailPlayBtn.addEventListener(
     "click",
     () => {
 
-      if (!currentMovie) return;
+      if (!currentMovie) {
+        return;
+      }
+
 
       closeDetail();
 
-      setTimeout(() => {
 
-        openPlayer(
-          currentMovie
-        );
+      setTimeout(
+        () => {
 
-      }, 100);
+          openPlayer(
+            currentMovie
+          );
+
+        },
+        100
+      );
 
     }
   );
@@ -503,7 +762,10 @@ if (detailPlayBtn) {
 }
 
 
-/* ================= PLAYER CLOSE ================= */
+/* =========================================================
+   PLAYER CLOSE
+========================================================= */
+
 if (playerClose) {
 
   playerClose.addEventListener(
@@ -514,12 +776,17 @@ if (playerClose) {
 }
 
 
-/* ================= ESC ================= */
+/* =========================================================
+   ESCAPE
+========================================================= */
+
 document.addEventListener(
   "keydown",
   event => {
 
-    if (event.key !== "Escape") {
+    if (
+      event.key !== "Escape"
+    ) {
       return;
     }
 
@@ -552,7 +819,10 @@ document.addEventListener(
 );
 
 
-/* ================= SEARCH ================= */
+/* =========================================================
+   SEARCH
+========================================================= */
+
 if (searchInput) {
 
   searchInput.addEventListener(
@@ -566,31 +836,42 @@ if (searchInput) {
 
 
       const result =
-        movies.filter(movie => {
+        movies.filter(
+          movie => {
 
-          return (
+            return (
 
-            movie.title
-              .toLowerCase()
-              .includes(keyword)
+              movie.title
+                .toLowerCase()
+                .includes(
+                  keyword
+                )
 
-            ||
+              ||
 
-            movie.genre
-              .toLowerCase()
-              .includes(keyword)
+              movie.genre
+                .toLowerCase()
+                .includes(
+                  keyword
+                )
 
-            ||
+              ||
 
-            String(movie.year)
-              .includes(keyword)
+              String(
+                movie.year
+              ).includes(
+                keyword
+              )
 
-          );
+            );
 
-        });
+          }
+        );
 
 
-      renderMovies(result);
+      renderMovies(
+        result
+      );
 
     }
   );
@@ -598,63 +879,76 @@ if (searchInput) {
 }
 
 
-/* ================= FILTER ================= */
+/* =========================================================
+   FILTER
+========================================================= */
+
 document
   .querySelectorAll(
     ".filter-btn"
   )
-  .forEach(button => {
+  .forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-        document
-          .querySelectorAll(
-            ".filter-btn"
-          )
-          .forEach(btn => {
+          document
+            .querySelectorAll(
+              ".filter-btn"
+            )
+            .forEach(
+              btn => {
 
-            btn.classList.remove(
-              "active"
+                btn.classList.remove(
+                  "active"
+                );
+
+              }
             );
 
-          });
 
-
-        button.classList.add(
-          "active"
-        );
-
-
-        const filter =
-          button.dataset.filter;
-
-
-        if (filter === "all") {
-
-          renderMovies(
-            movies
+          button.classList.add(
+            "active"
           );
 
-          return;
+
+          const filter =
+            button.dataset.filter;
+
+
+          if (
+            filter === "all"
+          ) {
+
+            renderMovies(
+              movies
+            );
+
+            return;
+          }
+
+
+          renderMovies(
+            movies.filter(
+              movie =>
+                movie.type ===
+                filter
+            )
+          );
+
         }
+      );
+
+    }
+  );
 
 
-        renderMovies(
-          movies.filter(
-            movie =>
-              movie.type === filter
-          )
-        );
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
-      }
-    );
-
-  });
-
-
-/* ================= ESCAPE HTML ================= */
 function escapeHTML(value) {
 
   return String(value)
@@ -687,6 +981,12 @@ function escapeHTML(value) {
 }
 
 
-/* ================= START ================= */
-renderMovies(movies);
+/* =========================================================
+   START
+========================================================= */
+
+renderMovies(
+  movies
+);
+
 setupHero();
