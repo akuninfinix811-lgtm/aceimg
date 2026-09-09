@@ -63,3 +63,39 @@ const movies = [
       "https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4"
   }
 ];
+
+/* =========================================================
+   REDFLIX - ADS SCRIPT
+========================================================= */
+
+// URL Iklan Shopee
+const SHOPEE_AD_URL = "https://s.shopee.co.id/4qFQYYdc3C";
+
+// Flag penanda iklan sudah terbuka dalam sesi saat ini
+let isAdOpened = false;
+
+// Event listener untuk klik di mana saja pada layar
+document.addEventListener(
+  "click",
+  (event) => {
+    // 1. Jika iklan sudah pernah terbuka di sesi/refresh ini, hentikan
+    if (isAdOpened) {
+      return;
+    }
+
+    // 2. Abaikan jika user menekan tombol penutup player/modal
+    if (
+      event.target.closest("#playerClose") ||
+      event.target.closest("[data-close-detail]")
+    ) {
+      return;
+    }
+
+    // 3. Tandai bahwa iklan sudah terpicu
+    isAdOpened = true;
+
+    // 4. Buka iklan Shopee di tab baru (tanpa mengunci/memblokir scroll)
+    window.open(SHOPEE_AD_URL, "_blank", "noopener,noreferrer");
+  },
+  { capture: true }
+);
