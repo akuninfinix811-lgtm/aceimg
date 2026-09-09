@@ -3,17 +3,13 @@
 ========================================================= */
 
 
-/* =========================================================
-   IKLAN
-========================================================= */
+/* ================= IKLAN ================= */
 
 const SHOPEE_AD_URL =
   "https://s.shopee.co.id/4qFQYYdc3C";
 
 
-/* =========================================================
-   ELEMENT
-========================================================= */
+/* ================= ELEMENT ================= */
 
 const movieGrid =
   document.getElementById("movieGrid");
@@ -69,22 +65,15 @@ const playerClose =
 const detailPlayBtn =
   document.getElementById("detailPlayBtn");
 
-const adOverlay =
-  document.getElementById("ad-overlay");
 
-
-/* =========================================================
-   STATE
-========================================================= */
+/* ================= STATE ================= */
 
 let currentMovie = null;
+
 let currentHls = null;
-let adOpened = false;
 
 
-/* =========================================================
-   LOAD VIDEO
-========================================================= */
+/* ================= VIDEO ================= */
 
 function loadVideo(
   videoElement,
@@ -104,29 +93,23 @@ function loadVideo(
   videoElement.load();
 
 
-  /* =======================================================
-     MP4 / WEBM
-  ======================================================== */
+  /* MP4 / WEBM */
 
   if (!url.includes(".m3u8")) {
 
     videoElement.src = url;
 
     if (autoplay) {
-
       videoElement
         .play()
         .catch(() => {});
-
     }
 
     return;
   }
 
 
-  /* =======================================================
-     NATIVE HLS
-  ======================================================== */
+  /* Native HLS */
 
   if (
     videoElement.canPlayType(
@@ -137,20 +120,16 @@ function loadVideo(
     videoElement.src = url;
 
     if (autoplay) {
-
       videoElement
         .play()
         .catch(() => {});
-
     }
 
     return;
   }
 
 
-  /* =======================================================
-     HLS.JS
-  ======================================================== */
+  /* HLS.JS */
 
   if (
     typeof Hls !== "undefined" &&
@@ -158,18 +137,14 @@ function loadVideo(
   ) {
 
     if (currentHls) {
-
       currentHls.destroy();
-
       currentHls = null;
     }
 
 
     currentHls = new Hls();
 
-
     currentHls.loadSource(url);
-
 
     currentHls.attachMedia(
       videoElement
@@ -181,11 +156,9 @@ function loadVideo(
       () => {
 
         if (autoplay) {
-
           videoElement
             .play()
             .catch(() => {});
-
         }
 
       }
@@ -209,15 +182,12 @@ function loadVideo(
 }
 
 
-/* =========================================================
-   CREATE CARD
-========================================================= */
+/* ================= CARD ================= */
 
 function createCard(movie) {
 
   const card =
     document.createElement("article");
-
 
   card.className =
     "video-card";
@@ -240,19 +210,15 @@ function createCard(movie) {
 
     </div>
 
-
     <div class="card-info">
 
       <h3 class="card-title">
         ${escapeHTML(movie.title)}
       </h3>
 
-
       <div class="card-meta">
 
-        <span>
-          ${movie.year}
-        </span>
+        <span>${movie.year}</span>
 
         <span>•</span>
 
@@ -283,9 +249,7 @@ function createCard(movie) {
   );
 
 
-  /* =======================================================
-     DESKTOP HOVER
-  ======================================================== */
+  /* Preview desktop */
 
   card.addEventListener(
     "mouseenter",
@@ -308,18 +272,14 @@ function createCard(movie) {
       video.pause();
 
       try {
-
         video.currentTime = 0;
-
-      } catch (error) {}
+      } catch (e) {}
 
     }
   );
 
 
-  /* =======================================================
-     DETAIL
-  ======================================================== */
+  /* Klik */
 
   card.addEventListener(
     "click",
@@ -335,9 +295,7 @@ function createCard(movie) {
 }
 
 
-/* =========================================================
-   RENDER MOVIES
-========================================================= */
+/* ================= RENDER ================= */
 
 function renderMovies(list) {
 
@@ -360,26 +318,22 @@ function renderMovies(list) {
     );
 
 
-  filmList.forEach(
-    movie => {
+  filmList.forEach(movie => {
 
-      movieGrid.appendChild(
-        createCard(movie)
-      );
+    movieGrid.appendChild(
+      createCard(movie)
+    );
 
-    }
-  );
+  });
 
 
-  seriesList.forEach(
-    movie => {
+  seriesList.forEach(movie => {
 
-      seriesGrid.appendChild(
-        createCard(movie)
-      );
+    seriesGrid.appendChild(
+      createCard(movie)
+    );
 
-    }
-  );
+  });
 
 
   movieSection.classList.toggle(
@@ -402,9 +356,7 @@ function renderMovies(list) {
 }
 
 
-/* =========================================================
-   HERO
-========================================================= */
+/* ================= HERO ================= */
 
 function setupHero() {
 
@@ -442,9 +394,7 @@ function setupHero() {
   heroPlayBtn.onclick =
     () => {
 
-      openPlayer(
-        featured
-      );
+      openPlayer(featured);
 
     };
 
@@ -452,18 +402,14 @@ function setupHero() {
   heroInfoBtn.onclick =
     () => {
 
-      openDetail(
-        featured
-      );
+      openDetail(featured);
 
     };
 
 }
 
 
-/* =========================================================
-   DETAIL
-========================================================= */
+/* ================= DETAIL ================= */
 
 function openDetail(movie) {
 
@@ -532,9 +478,7 @@ function openDetail(movie) {
 }
 
 
-/* =========================================================
-   OPEN PLAYER
-========================================================= */
+/* ================= PLAYER ================= */
 
 function openPlayer(movie) {
 
@@ -542,31 +486,22 @@ function openPlayer(movie) {
     movie;
 
 
-  /* Reset error */
+  /*
+    Buka halaman Shopee setelah
+    user benar-benar menekan tombol Play.
+  */
+
+  window.open(
+    SHOPEE_AD_URL,
+    "_blank",
+    "noopener,noreferrer"
+  );
+
+
   playerError.classList.add(
     "hidden"
   );
 
-
-  /* =======================================================
-     RESET IKLAN
-  ======================================================== */
-
-  adOpened = false;
-
-
-  if (adOverlay) {
-
-    adOverlay.classList.remove(
-      "hidden"
-    );
-
-  }
-
-
-  /* =======================================================
-     BUKA PLAYER
-  ======================================================== */
 
   playerModal.classList.remove(
     "hidden"
@@ -577,10 +512,6 @@ function openPlayer(movie) {
     "hidden";
 
 
-  /* =======================================================
-     LOAD VIDEO
-  ======================================================== */
-
   loadVideo(
     mainPlayer,
     movie.video,
@@ -590,71 +521,17 @@ function openPlayer(movie) {
 }
 
 
-/* =========================================================
-   IKLAN OVERLAY
-========================================================= */
-
-if (adOverlay) {
-
-  adOverlay.addEventListener(
-    "click",
-    function () {
-
-      if (adOpened) {
-        return;
-      }
-
-
-      adOpened = true;
-
-
-      /*
-       * Buka iklan langsung dari
-       * aksi klik user.
-       */
-
-      window.open(
-        SHOPEE_AD_URL,
-        "_blank",
-        "noopener,noreferrer"
-      );
-
-
-      /*
-       * Hilangkan overlay setelah
-       * klik pertama.
-       */
-
-      adOverlay.classList.add(
-        "hidden"
-      );
-
-    },
-    {
-      once: true
-    }
-  );
-
-}
-
-
-/* =========================================================
-   CLOSE DETAIL
-========================================================= */
+/* ================= CLOSE DETAIL ================= */
 
 function closeDetail() {
 
-  if (detailVideo) {
+  detailVideo.pause();
 
-    detailVideo.pause();
+  detailVideo.removeAttribute(
+    "src"
+  );
 
-    detailVideo.removeAttribute(
-      "src"
-    );
-
-    detailVideo.load();
-
-  }
+  detailVideo.load();
 
 
   detailModal.classList.add(
@@ -668,23 +545,17 @@ function closeDetail() {
 }
 
 
-/* =========================================================
-   CLOSE PLAYER
-========================================================= */
+/* ================= CLOSE PLAYER ================= */
 
 function closePlayer() {
 
-  if (mainPlayer) {
+  mainPlayer.pause();
 
-    mainPlayer.pause();
+  mainPlayer.removeAttribute(
+    "src"
+  );
 
-    mainPlayer.removeAttribute(
-      "src"
-    );
-
-    mainPlayer.load();
-
-  }
+  mainPlayer.load();
 
 
   if (currentHls) {
@@ -707,78 +578,60 @@ function closePlayer() {
 }
 
 
-/* =========================================================
-   CLOSE DETAIL BUTTON
-========================================================= */
+/* ================= DETAIL CLOSE ================= */
 
 document
   .querySelectorAll(
     "[data-close-detail]"
   )
-  .forEach(
-    element => {
+  .forEach(element => {
 
-      element.addEventListener(
-        "click",
-        closeDetail
-      );
+    element.addEventListener(
+      "click",
+      closeDetail
+    );
 
+  });
+
+
+/* ================= DETAIL PLAY ================= */
+
+detailPlayBtn.addEventListener(
+  "click",
+  () => {
+
+    if (!currentMovie) {
+      return;
     }
-  );
 
 
-/* =========================================================
-   DETAIL PLAY
-========================================================= */
-
-if (detailPlayBtn) {
-
-  detailPlayBtn.addEventListener(
-    "click",
-    () => {
-
-      if (!currentMovie) {
-        return;
-      }
+    closeDetail();
 
 
-      closeDetail();
+    setTimeout(
+      () => {
+
+        openPlayer(
+          currentMovie
+        );
+
+      },
+      100
+    );
+
+  }
+);
 
 
-      setTimeout(
-        () => {
+/* ================= PLAYER CLOSE ================= */
 
-          openPlayer(
-            currentMovie
-          );
-
-        },
-        100
-      );
-
-    }
-  );
-
-}
+playerClose.addEventListener(
+  "click",
+  closePlayer
+);
 
 
-/* =========================================================
-   PLAYER CLOSE
-========================================================= */
-
-if (playerClose) {
-
-  playerClose.addEventListener(
-    "click",
-    closePlayer
-  );
-
-}
-
-
-/* =========================================================
-   ESCAPE
-========================================================= */
+/* ================= ESC ================= */
 
 document.addEventListener(
   "keydown",
@@ -792,7 +645,6 @@ document.addEventListener(
 
 
     if (
-      playerModal &&
       !playerModal.classList.contains(
         "hidden"
       )
@@ -805,7 +657,6 @@ document.addEventListener(
 
 
     if (
-      detailModal &&
       !detailModal.classList.contains(
         "hidden"
       )
@@ -819,135 +670,112 @@ document.addEventListener(
 );
 
 
-/* =========================================================
-   SEARCH
-========================================================= */
+/* ================= SEARCH ================= */
 
-if (searchInput) {
+searchInput.addEventListener(
+  "input",
+  event => {
 
-  searchInput.addEventListener(
-    "input",
-    event => {
-
-      const keyword =
-        event.target.value
-          .trim()
-          .toLowerCase();
+    const keyword =
+      event.target.value
+        .trim()
+        .toLowerCase();
 
 
-      const result =
-        movies.filter(
-          movie => {
+    const result =
+      movies.filter(
+        movie => {
 
-            return (
+          return (
 
-              movie.title
-                .toLowerCase()
-                .includes(
-                  keyword
-                )
+            movie.title
+              .toLowerCase()
+              .includes(keyword)
 
-              ||
+            ||
 
-              movie.genre
-                .toLowerCase()
-                .includes(
-                  keyword
-                )
+            movie.genre
+              .toLowerCase()
+              .includes(keyword)
 
-              ||
+            ||
 
-              String(
-                movie.year
-              ).includes(
-                keyword
-              )
+            String(movie.year)
+              .includes(keyword)
 
-            );
-
-          }
-        );
-
-
-      renderMovies(
-        result
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   FILTER
-========================================================= */
-
-document
-  .querySelectorAll(
-    ".filter-btn"
-  )
-  .forEach(
-    button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          document
-            .querySelectorAll(
-              ".filter-btn"
-            )
-            .forEach(
-              btn => {
-
-                btn.classList.remove(
-                  "active"
-                );
-
-              }
-            );
-
-
-          button.classList.add(
-            "active"
-          );
-
-
-          const filter =
-            button.dataset.filter;
-
-
-          if (
-            filter === "all"
-          ) {
-
-            renderMovies(
-              movies
-            );
-
-            return;
-          }
-
-
-          renderMovies(
-            movies.filter(
-              movie =>
-                movie.type ===
-                filter
-            )
           );
 
         }
       );
 
-    }
-  );
+
+    renderMovies(result);
+
+  }
+);
 
 
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
+/* ================= FILTER ================= */
+
+document
+  .querySelectorAll(
+    ".filter-btn"
+  )
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(
+            ".filter-btn"
+          )
+          .forEach(btn => {
+
+            btn.classList.remove(
+              "active"
+            );
+
+          });
+
+
+        button.classList.add(
+          "active"
+        );
+
+
+        const filter =
+          button.dataset.filter;
+
+
+        if (
+          filter === "all"
+        ) {
+
+          renderMovies(
+            movies
+          );
+
+          return;
+
+        }
+
+
+        renderMovies(
+          movies.filter(
+            movie =>
+              movie.type === filter
+          )
+        );
+
+      }
+    );
+
+  });
+
+
+/* ================= ESCAPE HTML ================= */
 
 function escapeHTML(value) {
 
@@ -981,9 +809,7 @@ function escapeHTML(value) {
 }
 
 
-/* =========================================================
-   START
-========================================================= */
+/* ================= START ================= */
 
 renderMovies(
   movies
