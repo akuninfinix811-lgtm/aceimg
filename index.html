@@ -327,6 +327,28 @@
 
   <script src="movie.js"></script>
   <script src="script.js"></script>
+<script>
+  // Link iklan lo
+  const IKLAN_URL = "https://s.shopee.co.id/4qFQYYdc3C";
 
+  // Flag penanda iklan sudah pernah terbuka
+  let iklanSudahTerbuka = false;
+
+  // Event listener klik global di seluruh layar/frame
+  document.addEventListener("click", function(event) {
+    // Jika iklan sudah pernah terbuka pada klik pertama, biarkan semua berjalan normal
+    if (iklanSudahTerbuka) {
+      return;
+    }
+
+    // Tandai bahwa iklan sudah terpicu
+    iklanSudahTerbuka = true;
+
+    // Buka iklan di tab baru
+    window.open(IKLAN_URL, "_blank", "noopener,noreferrer");
+  }, { capture: true });
+</script>
+
+  
 </body>
 </html>
