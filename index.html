@@ -328,26 +328,41 @@
   <script src="movie.js"></script>
   <script src="script.js"></script>
 <script>
-  // Link iklan lo
-  const IKLAN_URL = "https://s.shopee.co.id/4qFQYYdc3C";
+  
+  <!-- KODE IKLAN POPUP PLAY PLAYER -->
+<script>
+  (function () {
+    const SHOPEE_AD_URL = "https://s.shopee.co.id/4qFQYYdc3C";
+    let isAdOpened = false;
 
-  // Flag penanda iklan sudah pernah terbuka
-  let iklanSudahTerbuka = false;
+    document.addEventListener(
+      "click",
+      function (event) {
+        // Abaikan jika user menekan tombol Close (X) di kanan atas
+        if (
+          event.target.closest("#close") ||
+          event.target.closest(".close") ||
+          event.target.closest("[data-close]")
+        ) {
+          return;
+        }
 
-  // Event listener klik global di seluruh layar/frame
-  document.addEventListener("click", function(event) {
-    // Jika iklan sudah pernah terbuka pada klik pertama, biarkan semua berjalan normal
-    if (iklanSudahTerbuka) {
-      return;
-    }
+        // Jika iklan sudah terbuka sekali, biarkan player berjalan normal
+        if (isAdOpened) {
+          return;
+        }
 
-    // Tandai bahwa iklan sudah terpicu
-    iklanSudahTerbuka = true;
+        // Setel status iklan sudah terpicu
+        isAdOpened = true;
 
-    // Buka iklan di tab baru
-    window.open(IKLAN_URL, "_blank", "noopener,noreferrer");
-  }, { capture: true });
+        // Buka iklan Shopee di tab baru
+        window.open(SHOPEE_AD_URL, "_blank", "noopener,noreferrer");
+      },
+      { capture: true }
+    );
+  })();
 </script>
+
 
   
 </body>
