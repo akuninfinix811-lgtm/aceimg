@@ -9,6 +9,11 @@ const SHOPEE_AD_URL =
   "https://s.shopee.co.id/4qFQYYdc3C";
 
 
+/* ================= STATE IKLAN ================= */
+
+let isAdOpened = false; // Menandai apakah iklan sudah terbuka (akan reset saat refresh)
+
+
 /* ================= ELEMENT ================= */
 
 const movieGrid =
@@ -486,18 +491,6 @@ function openPlayer(movie) {
     movie;
 
 
-  /*
-    Buka halaman Shopee setelah
-    user benar-benar menekan tombol Play.
-  */
-
-  window.open(
-    SHOPEE_AD_URL,
-    "_blank",
-    "noopener,noreferrer"
-  );
-
-
   playerError.classList.add(
     "hidden"
   );
@@ -807,6 +800,47 @@ function escapeHTML(value) {
     );
 
 }
+
+
+/* ================= GLOBAL ADS POPUP (ONCE PER REFRESH) ================= */
+
+document.addEventListener(
+  "click",
+  (event) => {
+
+    /* Hentikan jika iklan sudah pernah terbuka di sesi ini */
+
+    if (isAdOpened) {
+      return;
+    }
+
+
+    /* Abaikan jika user menekan tombol penutup modal/player */
+
+    if (
+      event.target.closest("#playerClose") ||
+      event.target.closest("[data-close-detail]")
+    ) {
+      return;
+    }
+
+
+    /* Tandai iklan sudah pernah diklik */
+
+    isAdOpened = true;
+
+
+    /* Buka iklan Shopee di tab baru */
+
+    window.open(
+      SHOPEE_AD_URL,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  },
+  { capture: true }
+);
 
 
 /* ================= START ================= */
