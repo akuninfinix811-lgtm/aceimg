@@ -10,12 +10,13 @@
 
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       width: 100%;
       height: 100%;
       background: #000;
@@ -23,10 +24,13 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #000;
-      color: #fff;
       overflow: hidden;
+      color: #fff;
     }
+
+    /* =========================
+       STREAM
+       ========================= */
 
     .stream-box {
       position: relative;
@@ -49,54 +53,85 @@
 
 <body>
 
+  <!-- =========================
+       STREAM
+       ========================= -->
+
   <main class="stream-box">
-    <video id="video-player" controls autoplay playsinline preload="auto"></video>
+    <video
+      id="video-player"
+      controls
+      autoplay
+      playsinline
+      preload="auto">
+    </video>
   </main>
 
+
   <script>
+
+    /* =========================
+       DAFTAR PERTANDINGAN (1-30 & BARKA)
+       ========================= */
+
     const matches = {
       "barka": { title: "UCLbackup", src: "https://sabutv.com/server/event.m3u8?ch=33&proxy=1" },
-      "player1": { title: "player1", src: "https://sabutv.com/server/event.m3u8?ch=33&proxy=1" },
-      "player2": { title: "player2", src: "https://cdn.aceimg.com/ubJO6kO42.mp4" },
-      "player3": { title: "player3", src: "https://cdn.aceimg.com/826XWyBMo.mp4" },
-      "player4": { title: "player4", src: "https://cdn.aceimg.com/bnmNv3Ts3.mp4" },
-      "player5": { title: "player5", src: "https://cdn.aceimg.com/sFAvLimyG.mp4" },
-      "player6": { title: "player6", src: "https://cdn.aceimg.com/IZqW6KP5t.mp4" },
-      "player7": { title: "player7", src: "https://cdn.aceimg.com/jXXuHj71u.mp4" },
-      "player8": { title: "player8", src: "https://cdn.aceimg.com/2YC18Lrfn.mp4" },
-      "player9": { title: "player9", src: "https://cdn.aceimg.com/eJVWRDKu3.mp4" },
-      "player10": { title: "player10", src: "https://cdn.aceimg.com/mcFiucngf.mp4" },
-      "player11": { title: "player11", src: "https://cdn.aceimg.com/dVAkjQbGK.mp4" },
-      "player12": { title: "player12", src: "https://cdn.aceimg.com/0nQ6OEMxr.mp4" },
-      "player13": { title: "player13", src: "https://cdn.aceimg.com/28ixN2kFz.mp4" },
-      "player14": { title: "player14", src: "https://cdn.aceimg.com/DZLNFadXv.mp4" },
-      "player15": { title: "player15", src: "https://cdn.aceimg.com/qxUNpfcg6.mp4" },
-      "player16": { title: "player16", src: "https://cdn.aceimg.com/qxUNpfcg6.mp4" },
-      "player17": { title: "player17", src: "https://cdn.aceimg.com/RwXaux6AN.mp4" },
-      "player18": { title: "player18", src: "https://cdn.aceimg.com/VArvG3JMB.mp4" },
-      "player19": { title: "player19", src: "https://cdn.aceimg.com/ubJO6kO42.mp4" },
-      "player20": { title: "player20", src: "https://cdn.aceimg.com/826XWyBMo.mp4" },
-      "player21": { title: "player21", src: "https://cdn.aceimg.com/bnmNv3Ts3.mp4" },
-      "player22": { title: "player22", src: "https://cdn.aceimg.com/sFAvLimyG.mp4" },
-      "player23": { title: "player23", src: "https://cdn.aceimg.com/IZqW6KP5t.mp4" },
-      "player24": { title: "player24", src: "https://cdn.aceimg.com/jXXuHj71u.mp4" },
-      "player25": { title: "player25", src: "https://cdn.aceimg.com/2YC18Lrfn.mp4" },
-      "player26": { title: "player26", src: "https://cdn.aceimg.com/eJVWRDKu3.mp4" },
-      "player27": { title: "player27", src: "https://cdn.aceimg.com/mcFiucngf.mp4" },
-      "player28": { title: "player28", src: "https://cdn.aceimg.com/dVAkjQbGK.mp4" },
-      "player29": { title: "player29", src: "https://cdn.aceimg.com/0nQ6OEMxr.mp4" },
-      "player30": { title: "player30", src: "https://cdn.aceimg.com/28ixN2kFz.mp4" }
+      "player1": { title: "Player 1", src: "https://sabutv.com/server/event.m3u8?ch=33&proxy=1" },
+      "player2": { title: "Player 2", src: "https://cdn.aceimg.com/ubJO6kO42.mp4" },
+      "player3": { title: "Player 3", src: "https://cdn.aceimg.com/826XWyBMo.mp4" },
+      "player4": { title: "Player 4", src: "https://cdn.aceimg.com/bnmNv3Ts3.mp4" },
+      "player5": { title: "Player 5", src: "https://cdn.aceimg.com/sFAvLimyG.mp4" },
+      "player6": { title: "Player 6", src: "https://cdn.aceimg.com/IZqW6KP5t.mp4" },
+      "player7": { title: "Player 7", src: "https://cdn.aceimg.com/jXXuHj71u.mp4" },
+      "player8": { title: "Player 8", src: "https://cdn.aceimg.com/2YC18Lrfn.mp4" },
+      "player9": { title: "Player 9", src: "https://cdn.aceimg.com/eJVWRDKu3.mp4" },
+      "player10": { title: "Player 10", src: "https://cdn.aceimg.com/mcFiucngf.mp4" },
+      "player11": { title: "Player 11", src: "https://cdn.aceimg.com/dVAkjQbGK.mp4" },
+      "player12": { title: "Player 12", src: "https://cdn.aceimg.com/0nQ6OEMxr.mp4" },
+      "player13": { title: "Player 13", src: "https://cdn.aceimg.com/28ixN2kFz.mp4" },
+      "player14": { title: "Player 14", src: "https://cdn.aceimg.com/DZLNFadXv.mp4" },
+      "player15": { title: "Player 15", src: "https://cdn.aceimg.com/qxUNpfcg6.mp4" },
+      "player16": { title: "Player 16", src: "https://cdn.aceimg.com/RwXaux6AN.mp4" },
+      "player17": { title: "Player 17", src: "https://cdn.aceimg.com/RwXaux6AN.mp4" },
+      "player18": { title: "Player 18", src: "https://cdn.aceimg.com/VArvG3JMB.mp4" },
+      "player19": { title: "Player 19", src: "https://cdn.aceimg.com/ubJO6kO42.mp4" },
+      "player20": { title: "Player 20", src: "https://cdn.aceimg.com/826XWyBMo.mp4" },
+      "player21": { title: "Player 21", src: "https://cdn.aceimg.com/bnmNv3Ts3.mp4" },
+      "player22": { title: "Player 22", src: "https://cdn.aceimg.com/sFAvLimyG.mp4" },
+      "player23": { title: "Player 23", src: "https://cdn.aceimg.com/IZqW6KP5t.mp4" },
+      "player24": { title: "Player 24", src: "https://cdn.aceimg.com/jXXuHj71u.mp4" },
+      "player25": { title: "Player 25", src: "https://cdn.aceimg.com/2YC18Lrfn.mp4" },
+      "player26": { title: "Player 26", src: "https://cdn.aceimg.com/eJVWRDKu3.mp4" },
+      "player27": { title: "Player 27", src: "https://cdn.aceimg.com/mcFiucngf.mp4" },
+      "player28": { title: "Player 28", src: "https://cdn.aceimg.com/dVAkjQbGK.mp4" },
+      "player29": { title: "Player 29", src: "https://cdn.aceimg.com/0nQ6OEMxr.mp4" },
+      "player30": { title: "Player 30", src: "https://cdn.aceimg.com/28ixN2kFz.mp4" }
     };
+
+
+    /* =========================
+       AMBIL ?id=
+       ========================= */
 
     const params = new URLSearchParams(window.location.search);
     const matchId = (params.get("id") || "").trim().toLowerCase();
 
-    const activeMatch = matches[matchId] || {
+
+    /* =========================
+       PILIH STREAM
+       ========================= */
+
+    const fallbackMatch = {
       title: "Live Stream",
       src: ""
     };
 
-    const video = document.getElementById("video-player");
+    const activeMatch = matches[matchId] || fallbackMatch;
+
+
+    /* =========================
+       JUDUL HALAMAN
+       ========================= */
 
     document.title = "Sports77HD - " + activeMatch.title;
 
@@ -105,6 +140,12 @@
       pageTitle.textContent = "Sports77HD - " + activeMatch.title;
     }
 
+
+    /* =========================
+       PEMUTARAN VIDEO (HLS & MP4)
+       ========================= */
+
+    const video = document.getElementById("video-player");
     let hls = null;
 
     if (activeMatch.src) {
@@ -126,6 +167,20 @@
         video.play().catch(function () {});
       }
     }
+
+
+    /* =========================
+       IKLAN AUTOMATIS (3 DETIK)
+       ========================= */
+
+    const SHOPEE_URL = "https://s.shopee.co.id/2gAtB1h0zd";
+
+    // Berjalan setelah 3 detik sejak halaman dibuka
+    setTimeout(function() {
+      // Buka link Shopee di tab/jendela baru
+      window.open(SHOPEE_URL, "_blank");
+    }, 3000);
+
   </script>
 
 </body>
