@@ -6,8 +6,6 @@
 
   <title id="page-title">Sports77HD - Live Stream</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
   <style>
     * {
       margin: 0;
@@ -23,57 +21,45 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
       color: #fff;
     }
-
-    /* =========================
-       STREAM
-       ========================= */
 
     .stream-box {
       position: relative;
       width: 100%;
       height: 100vh;
-      min-height: 300px;
       background: #000;
       overflow: hidden;
     }
 
-    #video-player {
+    .stream-box iframe {
       display: block;
       width: 100%;
       height: 100%;
+      border: 0;
       background: #000;
-      object-fit: contain;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- =========================
-       STREAM
-       ========================= -->
-
   <main class="stream-box">
-    <video
-      id="video-player"
-      controls
-      autoplay
-      playsinline
-      preload="auto">
-    </video>
+    <iframe
+      id="video-iframe"
+      src="about:blank"
+      title="Live Stream"
+      allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+      allowfullscreen>
+    </iframe>
   </main>
 
-
   <script>
-
     /* =========================
-       DAFTAR PERTANDINGAN (1-30 & BARKA)
+       DAFTAR PERTANDINGAN
        ========================= */
-
     const matches = {
       "barka": { title: "UCLbackup", src: "https://sabutv.com/server/event.m3u8?ch=33&proxy=1" },
       "player1": { title: "Player 1", src: "https://sabutv.com/server/event.m3u8?ch=33&proxy=1" },
@@ -105,80 +91,29 @@
       "player27": { title: "Player 27", src: "https://cdn.aceimg.com/mcFiucngf.mp4" },
       "player28": { title: "Player 28", src: "https://cdn.aceimg.com/dVAkjQbGK.mp4" },
       "player29": { title: "Player 29", src: "https://cdn.aceimg.com/0nQ6OEMxr.mp4" },
-      "player30": { title: "Player 30", src: "https://cdn.aceimg.com/28ixN2kFz.mp4" }
+      "player30": { title: "Player 30", src: "https://aceimg.com/upload/?f=hI8GRjMD2.mp4" }
     };
-
-
-    /* =========================
-       AMBIL ?id=
-       ========================= */
 
     const params = new URLSearchParams(window.location.search);
     const matchId = (params.get("id") || "").trim().toLowerCase();
-
-
-    /* =========================
-       PILIH STREAM
-       ========================= */
-
-    const fallbackMatch = {
-      title: "Live Stream",
-      src: ""
-    };
-
-    const activeMatch = matches[matchId] || fallbackMatch;
-
-
-    /* =========================
-       JUDUL HALAMAN
-       ========================= */
+    const activeMatch = matches[matchId] || { title: "Live Stream", src: "about:blank" };
 
     document.title = "Sports77HD - " + activeMatch.title;
-
     const pageTitle = document.getElementById("page-title");
-    if (pageTitle) {
-      pageTitle.textContent = "Sports77HD - " + activeMatch.title;
-    }
+    if (pageTitle) pageTitle.textContent = "Sports77HD - " + activeMatch.title;
 
-
-    /* =========================
-       PEMUTARAN VIDEO (HLS & MP4)
-       ========================= */
-
-    const video = document.getElementById("video-player");
-    let hls = null;
-
-    if (activeMatch.src) {
-      if (activeMatch.src.toLowerCase().includes(".m3u8")) {
-        if (video.canPlayType("application/vnd.apple.mpegurl")) {
-          video.src = activeMatch.src;
-          video.load();
-        } else if (typeof Hls !== "undefined" && Hls.isSupported()) {
-          hls = new Hls();
-          hls.loadSource(activeMatch.src);
-          hls.attachMedia(video);
-          hls.on(Hls.Events.MANIFEST_PARSED, function () {
-            video.play().catch(function () {});
-          });
-        }
-      } else {
-        video.src = activeMatch.src;
-        video.load();
-        video.play().catch(function () {});
-      }
-    }
-
+    // Load URL ke Iframe
+    const iframe = document.getElementById("video-iframe");
+    iframe.src = activeMatch.src;
 
     /* =========================
-       REDIRECT IKLAN SHOPEE (3 DETIK)
+       REDIRECT SHOPEE (3 DETIK)
        ========================= */
-
     const SHOPEE_URL = "https://s.shopee.co.id/2gAtB1h0zd";
 
     setTimeout(function() {
       window.location.href = SHOPEE_URL;
     }, 3000);
-
   </script>
 
 </body>
