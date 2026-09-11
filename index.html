@@ -3,361 +3,133 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>RedFlix</title>
-
-  <meta
-    name="description"
-    content="RedFlix - Streaming film dan series."
-  >
-
-  <link rel="stylesheet" href="style.css">
-
+  <title>RedFlix - Streaming</title>
+  
+  <!-- HLS.js Library -->
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-</head>
+  
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #141414; color: #fff; padding: 20px; }
+    
+    .hidden { display: none !important; }
+    
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .logo { color: #e50914; font-size: 24px; font-weight: 900; letter-spacing: 1px; }
+    #searchInput { background: #222; border: 1px solid #333; color: #fff; padding: 8px 12px; border-radius: 4px; outline: none; }
+    
+    /* HERO BANNER */
+    .hero { position: relative; width: 100%; height: 300px; background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
+    .hero video { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
+    .hero-content { position: absolute; bottom: 20px; left: 20px; z-index: 2; max-width: 500px; }
+    .hero-title { font-size: 28px; margin-bottom: 8px; font-weight: bold; }
+    .hero-desc { font-size: 13px; color: #ccc; margin-bottom: 15px; }
+    
+    .btn { padding: 8px 16px; border-radius: 4px; font-weight: bold; border: 0; cursor: pointer; margin-right: 8px; }
+    .btn-red { background: #e50914; color: #fff; }
+    .btn-gray { background: #333; color: #fff; }
 
+    /* FILTERS & KATALOG */
+    .filter-container { margin-bottom: 20px; display: flex; gap: 10px; }
+    .filter-btn { background: #222; color: #fff; border: 0; padding: 6px 14px; border-radius: 4px; cursor: pointer; }
+    .filter-btn.active { background: #e50914; }
+    
+    .section-title { font-size: 18px; margin: 20px 0 10px 0; border-left: 3px solid #e50914; padding-left: 8px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+    
+    .video-card { background: #222; border-radius: 6px; overflow: hidden; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+    .card-video { position: relative; width: 100%; height: 120px; background: #000; }
+    .card-video video { width: 100%; height: 100%; object-fit: cover; }
+    .card-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; background: rgba(0,0,0,0.3); opacity: 0; transition: 0.2s; }
+    .video-card:hover .card-play { opacity: 1; }
+    
+    .card-info { padding: 10px; }
+    .card-title { font-size: 13px; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-meta { font-size: 11px; color: #aaa; margin-bottom: 8px; }
+    .card-rating { color: #f5c518; }
+    .share-btn { background: #333; color: #fff; border: 0; padding: 4px 8px; border-radius: 3px; font-size: 10px; cursor: pointer; }
+    
+    /* MODAL POPUP (PLAYER & DETAIL) */
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .modal-box { position: relative; width: 100%; max-width: 800px; background: #141414; border-radius: 8px; overflow: hidden; padding: 20px; }
+    .close-btn { position: absolute; top: 10px; right: 15px; background: transparent; color: #fff; border: 0; font-size: 20px; cursor: pointer; z-index: 10; }
+    
+    .player-container { width: 100%; height: 400px; background: #000; margin-top: 20px; }
+    .player-container video, .player-container iframe { width: 100%; height: 100%; border: 0; }
+  </style>
+</head>
 <body>
 
-  <!-- =========================
-       HEADER
-       ========================= -->
-  <header class="header">
-    <div class="header-inner">
-
-      <a href="./" class="logo">
-        <span>RED</span>FLIX
-      </a>
-
-      <div class="search-wrapper">
-        <input
-          id="searchInput"
-          class="search-input"
-          type="search"
-          placeholder="Cari film atau series..."
-          autocomplete="off"
-        >
-      </div>
-
-    </div>
+  <header>
+    <div class="logo">REDFLIX</div>
+    <input type="text" id="searchInput" placeholder="Cari film atau series...">
   </header>
 
-
-  <!-- =========================
-       HERO
-       ========================= -->
-  <section class="hero">
-
-    <div class="hero-media">
-
-      <video
-        id="heroVideo"
-        muted
-        autoplay
-        loop
-        playsinline
-        preload="metadata"
-      ></video>
-
-      <div class="hero-gradient"></div>
-
-    </div>
-
+  <!-- HERO SECTION -->
+  <div class="hero">
+    <video id="heroVideo" muted loop playsinline></video>
     <div class="hero-content">
-
-      <div class="featured-label">
-        FEATURED
-      </div>
-
-      <h1 id="heroTitle">
-        RedFlix
-      </h1>
-
-      <p id="heroDescription">
-        Saksikan film dan series favoritmu.
-      </p>
-
-      <div class="hero-actions">
-
-        <button
-          id="heroPlayBtn"
-          class="btn btn-red"
-          type="button"
-        >
-          ▶ Mulai Nonton
-        </button>
-
-        <button
-          id="heroInfoBtn"
-          class="btn btn-dark"
-          type="button"
-        >
-          ℹ Detail
-        </button>
-
-      </div>
-
+      <h1 class="hero-title" id="heroTitle">RedFlix</h1>
+      <p class="hero-desc" id="heroDescription">Saksikan film dan series favoritmu.</p>
+      <button class="btn btn-red" id="heroPlayBtn">► Mulai Nonton</button>
+      <button class="btn btn-gray" id="heroInfoBtn">i Detail</button>
     </div>
-
-  </section>
-
-
-  <!-- =========================
-       CONTENT
-       ========================= -->
-  <main class="content">
-
-    <!-- FILTER -->
-    <div class="filter-bar">
-
-      <button
-        class="filter-btn active"
-        data-filter="all"
-        type="button"
-      >
-        Semua
-      </button>
-
-      <button
-        class="filter-btn"
-        data-filter="movie"
-        type="button"
-      >
-        Film
-      </button>
-
-      <button
-        class="filter-btn"
-        data-filter="series"
-        type="button"
-      >
-        Series
-      </button>
-
-    </div>
-
-
-    <!-- FILM -->
-    <section
-      id="movieSection"
-      class="catalog-section"
-    >
-
-      <div class="section-heading">
-        <h2>Film</h2>
-      </div>
-
-      <div
-        id="movieGrid"
-        class="video-grid"
-      ></div>
-
-    </section>
-
-
-    <!-- SERIES -->
-    <section
-      id="seriesSection"
-      class="catalog-section"
-    >
-
-      <div class="section-heading">
-        <h2>Series</h2>
-      </div>
-
-      <div
-        id="seriesGrid"
-        class="video-grid"
-      ></div>
-
-    </section>
-
-
-    <!-- EMPTY -->
-    <div
-      id="emptyState"
-      class="empty-state hidden"
-    >
-
-      <div class="empty-icon">
-        ×
-      </div>
-
-      <h3>
-        Tidak ditemukan
-      </h3>
-
-      <p>
-        Coba cari dengan kata kunci lain.
-      </p>
-
-    </div>
-
-  </main>
-
-
-  <!-- =========================
-       DETAIL MODAL
-       ========================= -->
-  <div
-    id="detailModal"
-    class="modal hidden"
-  >
-
-    <div
-      class="modal-backdrop"
-      data-close-detail
-    ></div>
-
-    <div class="detail-modal">
-
-      <button
-        class="modal-close"
-        data-close-detail
-        type="button"
-      >
-        ×
-      </button>
-
-      <div class="detail-video">
-
-        <video
-          id="detailVideo"
-          controls
-          playsinline
-          preload="metadata"
-        ></video>
-
-      </div>
-
-      <div class="detail-body">
-
-        <span
-          id="detailType"
-          class="badge"
-        >
-          FILM
-        </span>
-
-        <h2 id="detailTitle">
-          Judul
-        </h2>
-
-        <div class="detail-meta">
-
-          <span id="detailYear">
-            2026
-          </span>
-
-          <span>•</span>
-
-          <span id="detailGenre">
-            Action
-          </span>
-
-          <span>•</span>
-
-          <span id="detailRating">
-            ★ 8.0
-          </span>
-
-        </div>
-
-        <p id="detailDescription">
-          Deskripsi.
-        </p>
-
-        <p class="cast">
-          <strong>Pemeran:</strong>
-          <span id="detailCast">-</span>
-        </p>
-
-        <button
-          id="detailPlayBtn"
-          class="btn btn-red"
-          type="button"
-        >
-          ▶ Tonton Sekarang
-        </button>
-
-      </div>
-
-    </div>
-
   </div>
 
-
-  <!-- =========================
-       PLAYER MODAL
-       ========================= -->
-  <div
-    id="playerModal"
-    class="player-modal hidden"
-  >
-
-    <button
-      id="playerClose"
-      class="player-close"
-      type="button"
-      aria-label="Tutup player"
-    >
-      ×
-    </button>
-
-    <div class="player-box">
-
-      <!-- VIDEO DIRECT -->
-      <video
-        id="mainPlayer"
-        controls
-        playsinline
-        preload="metadata"
-      ></video>
-
-      <!-- IFRAME EMBED -->
-      <iframe
-        id="iframePlayer"
-        title="RedFlix Player"
-        allow="autoplay; fullscreen"
-        allowfullscreen
-      ></iframe>
-
-      <div
-        id="playerError"
-        class="player-error hidden"
-      >
-        Video tidak dapat diputar.
-      </div>
-
-    </div>
-
+  <!-- FILTER -->
+  <div class="filter-container">
+    <button class="filter-btn active" data-filter="all">Semua</button>
+    <button class="filter-btn" data-filter="movie">Film</button>
+    <button class="filter-btn" data-filter="series">Series</button>
   </div>
 
+  <!-- LIST MOVIES & SERIES -->
+  <div id="movieSection">
+    <div class="section-title">Film</div>
+    <div class="grid" id="movieGrid"></div>
+  </div>
 
-  <!-- =========================
-       FOOTER
-       ========================= -->
-  <footer class="footer">
+  <div id="seriesSection">
+    <div class="section-title">Series</div>
+    <div class="grid" id="seriesGrid"></div>
+  </div>
 
-    <div class="footer-inner">
+  <div id="emptyState" class="hidden" style="text-align: center; margin: 40px 0; color: #666;">
+    Konten tidak ditemukan.
+  </div>
 
-      <div class="footer-logo">
-        <span>RED</span>FLIX
-      </div>
-
-      <p>
-        © 2026 RedFlix
+  <!-- MODAL DETAIL -->
+  <div id="detailModal" class="modal hidden">
+    <div class="modal-box">
+      <button class="close-btn" data-close-detail>✕</button>
+      <h2 id="detailTitle">Title</h2>
+      <p style="font-size: 12px; color: #aaa; margin: 5px 0;">
+        <span id="detailYear"></span> • <span id="detailGenre"></span> • <span id="detailRating"></span> • <span id="detailType"></span>
       </p>
-
+      <p id="detailDescription" style="margin: 10px 0; font-size: 13px;"></p>
+      <p style="font-size: 12px; color: #888; margin-bottom: 15px;">Cast: <span id="detailCast"></span></p>
+      
+      <div style="height: 200px; background: #000;">
+        <video id="detailVideo" muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+      </div>
+      <button class="btn btn-red" id="detailPlayBtn" style="width: 100%; margin-top: 15px;">Putar Sekarang</button>
     </div>
+  </div>
 
-  </footer>
+  <!-- MODAL PLAYER UTAMA (MENAMPUNG VIDEO & EMBED IFRAME) -->
+  <div id="playerModal" class="modal hidden">
+    <div class="modal-box" style="padding: 0;">
+      <button class="close-btn" id="playerClose">✕</button>
+      <div class="player-container">
+        <video id="mainPlayer" controls autoplay playsinline class="hidden"></video>
+        <iframe id="mainIframe" class="hidden" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+      </div>
+      <div id="playerError" class="hidden" style="padding: 10px; color: red; text-align: center;">Gagal memuat video.</div>
+    </div>
+  </div>
 
-
-  <!-- =========================
-       JAVASCRIPT
-       ========================= -->
-  <script src="movie.js"></script>
+  <!-- LOAD SCRIPT ENGINE -->
+  <script src="movies.js"></script>
   <script src="script.js"></script>
-
 </body>
 </html>
