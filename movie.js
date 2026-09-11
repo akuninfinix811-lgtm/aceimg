@@ -17,18 +17,18 @@ const movies = [
 
   {
     id: 2,
-    title: "Contoh Film Drama",
+    title: "tetangga mamaku",
     year: 2026,
-    genre: "Drama",
+    genre: "colmek",
     rating: "8.1",
     type: "movie",
     featured: false,
     description:
-      "Contoh film drama untuk katalog RedFlix.",
+      "Tetangga mamaku lagi sange.",
     cast:
       "Actor 4, Actor 5",
     video:
-      "https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4"
+      "https://gudangbf.vercel.app/?id=player2"
   },
 
   {
