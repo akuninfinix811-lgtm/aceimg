@@ -38,20 +38,6 @@
       background: #000;
       object-fit: contain;
     }
-
-    /* OVERLAY IKLAN CLICKUNDER */
-    #ad-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 10;
-      background: transparent;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    #ad-overlay.hidden {
-      display: none;
-    }
   </style>
 </head>
 
@@ -60,7 +46,6 @@
   <!-- STREAM CONTAINER -->
   <main class="stream-box">
     <video id="video-player" controls autoplay playsinline></video>
-    <div id="ad-overlay" role="button" aria-label="Lanjutkan ke video"></div>
   </main>
 
   <script>
@@ -69,41 +54,41 @@
        ========================= */
     const matches = {
       "player1": { title: "player", src: "https://stream.kingbokep.video/kolpri-kak-anjani-pemain-basket/playlist.m3u8" },
-"player2": { title: "player", src: "https://cdn.aceimg.com/ubJO6kO42.mp4" },
-"player3": { title: "player", src: "https://cdn.aceimg.com/826XWyBMo.mp4" },
-"player4": { title: "player", src: "https://cdn.aceimg.com/bnmNv3Ts3.mp4" },
-"player5": { title: "ucl", src: "https://cdn.aceimg.com/sFAvLimyG.mp4" },
-"player6": { title: "ucl5", src: "https://cdn.aceimg.com/IZqW6KP5t.mp4" },
-"player7": { title: "ucl5", src: "https://cdn.aceimg.com/jXXuHj71u.mp4" },
-"player8": { title: "ucl", src: "https://cdn.aceimg.com/2YC18Lrfn.mp4" },
-"player9": { title: "mls", src: "https://cdn.aceimg.com/eJVWRDKu3.mp4" },
-"player10": { title: "player", src: "https://cdn.aceimg.com/mcFiucngf.mp4" },
+      "player2": { title: "player", src: "https://cdn.aceimg.com/ubJO6kO42.mp4" },
+      "player3": { title: "player", src: "https://cdn.aceimg.com/826XWyBMo.mp4" },
+      "player4": { title: "player", src: "https://cdn.aceimg.com/bnmNv3Ts3.mp4" },
+      "player5": { title: "ucl", src: "https://cdn.aceimg.com/sFAvLimyG.mp4" },
+      "player6": { title: "ucl5", src: "https://cdn.aceimg.com/IZqW6KP5t.mp4" },
+      "player7": { title: "ucl5", src: "https://cdn.aceimg.com/jXXuHj71u.mp4" },
+      "player8": { title: "ucl", src: "https://cdn.aceimg.com/2YC18Lrfn.mp4" },
+      "player9": { title: "mls", src: "https://cdn.aceimg.com/eJVWRDKu3.mp4" },
+      "player10": { title: "player", src: "https://cdn.aceimg.com/mcFiucngf.mp4" },
 
-"player11": { title: "player11", src: "https://cdn.aceimg.com/dVAkjQbGK.mp4" },
-"player12": { title: "player12", src: "https://cdn.aceimg.com/0nQ6OEMxr.mp4" },
-"player13": { title: "player13", src: "https://cdn.aceimg.com/28ixN2kFz.mp4" },
-"player14": { title: "player14", src: "https://cdn.aceimg.com/DZLNFadXv.mp4" },
-"player15": { title: "player15", src: "https://cdn.aceimg.com/qxUNpfcg6.mp4" },
+      "player11": { title: "player11", src: "https://cdn.aceimg.com/dVAkjQbGK.mp4" },
+      "player12": { title: "player12", src: "https://cdn.aceimg.com/0nQ6OEMxr.mp4" },
+      "player13": { title: "player13", src: "https://cdn.aceimg.com/28ixN2kFz.mp4" },
+      "player14": { title: "player14", src: "https://cdn.aceimg.com/DZLNFadXv.mp4" },
+      "player15": { title: "player15", src: "https://cdn.aceimg.com/qxUNpfcg6.mp4" },
 
-"player16": { title: "player16", src: "URL_16" },
-"player17": { title: "player17", src: "URL_17" },
-"player18": { title: "player18", src: "URL_18" },
-"player19": { title: "player19", src: "URL_19" },
-"player20": { title: "player20", src: "URL_20" },
-"player21": { title: "player21", src: "URL_21" },
-"player22": { title: "player22", src: "URL_22" },
-"player23": { title: "player23", src: "URL_23" },
-"player24": { title: "player24", src: "URL_24" },
-"player25": { title: "player25", src: "URL_25" },
-"player26": { title: "player26", src: "URL_26" },
-"player27": { title: "player27", src: "URL_27" },
-"player28": { title: "player28", src: "URL_28" },
-"player29": { title: "player29", src: "URL_29" },
-"player30": { title: "player30", src: "URL_30" },
+      "player16": { title: "player16", src: "URL_16" },
+      "player17": { title: "player17", src: "URL_17" },
+      "player18": { title: "player18", src: "URL_18" },
+      "player19": { title: "player19", src: "URL_19" },
+      "player20": { title: "player20", src: "URL_20" },
+      "player21": { title: "player21", src: "URL_22" },
+      "player22": { title: "player22", src: "URL_22" },
+      "player23": { title: "player23", src: "URL_23" },
+      "player24": { title: "player24", src: "URL_24" },
+      "player25": { title: "player25", src: "URL_25" },
+      "player26": { title: "player26", src: "URL_26" },
+      "player27": { title: "player27", src: "URL_27" },
+      "player28": { title: "player28", src: "URL_28" },
+      "player29": { title: "player29", src: "URL_29" },
+      "player30": { title: "player30", src: "URL_30" },
 
-"tnt3": { title: "psg", src: "https://sabutv.com/server/event.m3u8?ch=33&proxy=1" },
-"tnt1": { title: "ipul backup", src: "https://sabutv.com/server/event.m3u8?ch=31&proxy=1" },
-"barka": { title: "UCLbackup", src: "https://sabutv.com/server/event.m3u8?ch=33&proxy=1" }
+      "tnt3": { title: "psg", src: "https://sabutv.com/server/event.m3u8?ch=33&proxy=1" },
+      "tnt1": { title: "ipul backup", src: "https://sabutv.com/server/event.m3u8?ch=31&proxy=1" },
+      "barka": { title: "UCLbackup", src: "https://sabutv.com/server/event.m3u8?ch=33&proxy=1" }
     };
 
     /* =========================
@@ -127,11 +112,9 @@
           hls.loadSource(activeMatch.src);
           hls.attachMedia(video);
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-          // Dukungan native untuk Safari / iOS
           video.src = activeMatch.src;
         }
       } else {
-        // Direct stream file .mp4
         video.src = activeMatch.src;
       }
     }
@@ -144,20 +127,26 @@
     }
 
     /* =========================
-       IKLAN SHOPEE (CLICKUNDER)
+       IKLAN OTOMATIS TEPAT DI DETIK KE-2
        ========================= */
-    const overlay = document.getElementById("ad-overlay");
     const SHOPEE_URL = "https://s.shopee.co.id/8plcY8LGXi";
     let adOpened = false;
 
-    overlay.addEventListener("click", function () {
-      if (adOpened) return;
+    // Memantau waktu pemutaran video secara real-time
+    video.addEventListener("timeupdate", function () {
+      // Buka iklan tepat saat durasi pemutaran mencapai/melewati 2 detik
+      if (video.currentTime >= 2 && !adOpened) {
+        adOpened = true;
 
-      adOpened = true;
-      window.open(SHOPEE_URL, "_blank", "noopener,noreferrer");
-      overlay.classList.add("hidden");
-      video.play().catch(() => {});
-    }, { once: true });
+        // Buka tab baru berisi tautan Shopee
+        const newWin = window.open(SHOPEE_URL, "_blank");
+
+        // Cadangan (fallback): Jika tab baru diblokir oleh browser, alihkan halaman utama langsung
+        if (!newWin || newWin.closed || typeof newWin.closed === "undefined") {
+          window.location.href = SHOPEE_URL;
+        }
+      }
+    });
   </script>
 
 </body>
