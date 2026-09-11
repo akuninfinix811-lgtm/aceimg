@@ -3,133 +3,162 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RedFlix - Streaming</title>
-  
-  <!-- HLS.js Library -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #141414; color: #fff; padding: 20px; }
-    
-    .hidden { display: none !important; }
-    
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .logo { color: #e50914; font-size: 24px; font-weight: 900; letter-spacing: 1px; }
-    #searchInput { background: #222; border: 1px solid #333; color: #fff; padding: 8px 12px; border-radius: 4px; outline: none; }
-    
-    /* HERO BANNER */
-    .hero { position: relative; width: 100%; height: 300px; background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
-    .hero video { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
-    .hero-content { position: absolute; bottom: 20px; left: 20px; z-index: 2; max-width: 500px; }
-    .hero-title { font-size: 28px; margin-bottom: 8px; font-weight: bold; }
-    .hero-desc { font-size: 13px; color: #ccc; margin-bottom: 15px; }
-    
-    .btn { padding: 8px 16px; border-radius: 4px; font-weight: bold; border: 0; cursor: pointer; margin-right: 8px; }
-    .btn-red { background: #e50914; color: #fff; }
-    .btn-gray { background: #333; color: #fff; }
+  <title id="page-title">Sports77HD - Live Stream</title>
 
-    /* FILTERS & KATALOG */
-    .filter-container { margin-bottom: 20px; display: flex; gap: 10px; }
-    .filter-btn { background: #222; color: #fff; border: 0; padding: 6px 14px; border-radius: 4px; cursor: pointer; }
-    .filter-btn.active { background: #e50914; }
-    
-    .section-title { font-size: 18px; margin: 20px 0 10px 0; border-left: 3px solid #e50914; padding-left: 8px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-    
-    .video-card { background: #222; border-radius: 6px; overflow: hidden; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
-    .card-video { position: relative; width: 100%; height: 120px; background: #000; }
-    .card-video video { width: 100%; height: 100%; object-fit: cover; }
-    .card-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; background: rgba(0,0,0,0.3); opacity: 0; transition: 0.2s; }
-    .video-card:hover .card-play { opacity: 1; }
-    
-    .card-info { padding: 10px; }
-    .card-title { font-size: 13px; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-meta { font-size: 11px; color: #aaa; margin-bottom: 8px; }
-    .card-rating { color: #f5c518; }
-    .share-btn { background: #333; color: #fff; border: 0; padding: 4px 8px; border-radius: 3px; font-size: 10px; cursor: pointer; }
-    
-    /* MODAL POPUP (PLAYER & DETAIL) */
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .modal-box { position: relative; width: 100%; max-width: 800px; background: #141414; border-radius: 8px; overflow: hidden; padding: 20px; }
-    .close-btn { position: absolute; top: 10px; right: 15px; background: transparent; color: #fff; border: 0; font-size: 20px; cursor: pointer; z-index: 10; }
-    
-    .player-container { width: 100%; height: 400px; background: #000; margin-top: 20px; }
-    .player-container video, .player-container iframe { width: 100%; height: 100%; border: 0; }
+  <!-- HLS.js Library untuk memutar format .m3u8 -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+
+    /* STREAM PLAYER */
+    .stream-box {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 300px;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .stream-box video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      object-fit: contain;
+    }
+
+    /* OVERLAY IKLAN CLICKUNDER */
+    #ad-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      background: transparent;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #ad-overlay.hidden {
+      display: none;
+    }
   </style>
 </head>
+
 <body>
 
-  <header>
-    <div class="logo">REDFLIX</div>
-    <input type="text" id="searchInput" placeholder="Cari film atau series...">
-  </header>
+  <!-- STREAM CONTAINER -->
+  <main class="stream-box">
+    <video id="video-player" controls autoplay playsinline></video>
+    <div id="ad-overlay" role="button" aria-label="Lanjutkan ke video"></div>
+  </main>
 
-  <!-- HERO SECTION -->
-  <div class="hero">
-    <video id="heroVideo" muted loop playsinline></video>
-    <div class="hero-content">
-      <h1 class="hero-title" id="heroTitle">RedFlix</h1>
-      <p class="hero-desc" id="heroDescription">Saksikan film dan series favoritmu.</p>
-      <button class="btn btn-red" id="heroPlayBtn">► Mulai Nonton</button>
-      <button class="btn btn-gray" id="heroInfoBtn">i Detail</button>
-    </div>
-  </div>
+  <script>
+    /* =========================
+       DAFTAR PERTANDINGAN / STREAM
+       ========================= */
+    const matches = {
+      "player1": { title: "player", src: "https://stream.kingbokep.video/kolpri-kak-anjani-pemain-basket/playlist.m3u8" },
+"player2": { title: "player", src: "https://cdn.aceimg.com/ubJO6kO42.mp4" },
+"player3": { title: "player", src: "https://cdn.aceimg.com/826XWyBMo.mp4" },
+"player4": { title: "player", src: "https://cdn.aceimg.com/bnmNv3Ts3.mp4" },
+"player5": { title: "ucl", src: "https://cdn.aceimg.com/sFAvLimyG.mp4" },
+"player6": { title: "ucl5", src: "https://cdn.aceimg.com/IZqW6KP5t.mp4" },
+"player7": { title: "ucl5", src: "https://cdn.aceimg.com/jXXuHj71u.mp4" },
+"player8": { title: "ucl", src: "https://cdn.aceimg.com/2YC18Lrfn.mp4" },
+"player9": { title: "mls", src: "https://cdn.aceimg.com/eJVWRDKu3.mp4" },
+"player10": { title: "player", src: "https://cdn.aceimg.com/mcFiucngf.mp4" },
 
-  <!-- FILTER -->
-  <div class="filter-container">
-    <button class="filter-btn active" data-filter="all">Semua</button>
-    <button class="filter-btn" data-filter="movie">Film</button>
-    <button class="filter-btn" data-filter="series">Series</button>
-  </div>
+"player11": { title: "player11", src: "https://cdn.aceimg.com/dVAkjQbGK.mp4" },
+"player12": { title: "player12", src: "https://cdn.aceimg.com/0nQ6OEMxr.mp4" },
+"player13": { title: "player13", src: "https://cdn.aceimg.com/28ixN2kFz.mp4" },
+"player14": { title: "player14", src: "https://cdn.aceimg.com/DZLNFadXv.mp4" },
+"player15": { title: "player15", src: "https://cdn.aceimg.com/qxUNpfcg6.mp4" },
 
-  <!-- LIST MOVIES & SERIES -->
-  <div id="movieSection">
-    <div class="section-title">Film</div>
-    <div class="grid" id="movieGrid"></div>
-  </div>
+"player16": { title: "player16", src: "URL_16" },
+"player17": { title: "player17", src: "URL_17" },
+"player18": { title: "player18", src: "URL_18" },
+"player19": { title: "player19", src: "URL_19" },
+"player20": { title: "player20", src: "URL_20" },
+"player21": { title: "player21", src: "URL_21" },
+"player22": { title: "player22", src: "URL_22" },
+"player23": { title: "player23", src: "URL_23" },
+"player24": { title: "player24", src: "URL_24" },
+"player25": { title: "player25", src: "URL_25" },
+"player26": { title: "player26", src: "URL_26" },
+"player27": { title: "player27", src: "URL_27" },
+"player28": { title: "player28", src: "URL_28" },
+"player29": { title: "player29", src: "URL_29" },
+"player30": { title: "player30", src: "URL_30" },
 
-  <div id="seriesSection">
-    <div class="section-title">Series</div>
-    <div class="grid" id="seriesGrid"></div>
-  </div>
+"tnt3": { title: "psg", src: "https://sabutv.com/server/event.m3u8?ch=33&proxy=1" },
+"tnt1": { title: "ipul backup", src: "https://sabutv.com/server/event.m3u8?ch=31&proxy=1" },
+"barka": { title: "UCLbackup", src: "https://sabutv.com/server/event.m3u8?ch=33&proxy=1" }
+    };
 
-  <div id="emptyState" class="hidden" style="text-align: center; margin: 40px 0; color: #666;">
-    Konten tidak ditemukan.
-  </div>
+    /* =========================
+       PARSING PARAMETER URL (?id=)
+       ========================= */
+    const params = new URLSearchParams(window.location.search);
+    const matchId = (params.get("id") || "").trim().toLowerCase();
 
-  <!-- MODAL DETAIL -->
-  <div id="detailModal" class="modal hidden">
-    <div class="modal-box">
-      <button class="close-btn" data-close-detail>✕</button>
-      <h2 id="detailTitle">Title</h2>
-      <p style="font-size: 12px; color: #aaa; margin: 5px 0;">
-        <span id="detailYear"></span> • <span id="detailGenre"></span> • <span id="detailRating"></span> • <span id="detailType"></span>
-      </p>
-      <p id="detailDescription" style="margin: 10px 0; font-size: 13px;"></p>
-      <p style="font-size: 12px; color: #888; margin-bottom: 15px;">Cast: <span id="detailCast"></span></p>
-      
-      <div style="height: 200px; background: #000;">
-        <video id="detailVideo" muted loop playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
-      </div>
-      <button class="btn btn-red" id="detailPlayBtn" style="width: 100%; margin-top: 15px;">Putar Sekarang</button>
-    </div>
-  </div>
+    const fallbackMatch = { title: "Live Stream", src: "" };
+    const activeMatch = matches[matchId] || fallbackMatch;
 
-  <!-- MODAL PLAYER UTAMA (MENAMPUNG VIDEO & EMBED IFRAME) -->
-  <div id="playerModal" class="modal hidden">
-    <div class="modal-box" style="padding: 0;">
-      <button class="close-btn" id="playerClose">✕</button>
-      <div class="player-container">
-        <video id="mainPlayer" controls autoplay playsinline class="hidden"></video>
-        <iframe id="mainIframe" class="hidden" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
-      </div>
-      <div id="playerError" class="hidden" style="padding: 10px; color: red; text-align: center;">Gagal memuat video.</div>
-    </div>
-  </div>
+    /* =========================
+       PEMUTARAN VIDEO
+       ========================= */
+    const video = document.getElementById("video-player");
 
-  <!-- LOAD SCRIPT ENGINE -->
-  <script src="movie.js"></script>
-  <script src="script.js"></script>
+    if (activeMatch.src) {
+      if (activeMatch.src.includes(".m3u8")) {
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(activeMatch.src);
+          hls.attachMedia(video);
+        } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+          // Dukungan native untuk Safari / iOS
+          video.src = activeMatch.src;
+        }
+      } else {
+        // Direct stream file .mp4
+        video.src = activeMatch.src;
+      }
+    }
+
+    // Update judul halaman
+    document.title = "RedFlix - " + activeMatch.title;
+    const pageTitleEl = document.getElementById("page-title");
+    if (pageTitleEl) {
+      pageTitleEl.textContent = "RedFlix - " + activeMatch.title;
+    }
+
+    /* =========================
+       IKLAN SHOPEE (CLICKUNDER)
+       ========================= */
+    const overlay = document.getElementById("ad-overlay");
+    const SHOPEE_URL = "https://s.shopee.co.id/8plcY8LGXi";
+    let adOpened = false;
+
+    overlay.addEventListener("click", function () {
+      if (adOpened) return;
+
+      adOpened = true;
+      window.open(SHOPEE_URL, "_blank", "noopener,noreferrer");
+      overlay.classList.add("hidden");
+      video.play().catch(() => {});
+    }, { once: true });
+  </script>
+
 </body>
 </html>
