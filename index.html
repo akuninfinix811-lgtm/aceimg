@@ -58,7 +58,6 @@
 <body>
 
   <main class="stream-box">
-
     <video
       id="video-player"
       controls
@@ -66,14 +65,9 @@
       playsinline
       preload="auto">
     </video>
-
   </main>
 
   <script>
-    /* =====================================================
-       PLAYER 1 - 30
-       ===================================================== */
-
     const matches = {
 
       "player1": {
@@ -229,10 +223,6 @@
     };
 
 
-    /* =====================================================
-       AMBIL ?id=
-       ===================================================== */
-
     const params =
       new URLSearchParams(
         window.location.search
@@ -244,10 +234,6 @@
         .toLowerCase();
 
 
-    /* =====================================================
-       PLAYER AKTIF
-       ===================================================== */
-
     const activeMatch =
       matches[matchId] || {
         title: "Live Stream",
@@ -255,19 +241,11 @@
       };
 
 
-    /* =====================================================
-       VIDEO
-       ===================================================== */
-
     const video =
       document.getElementById(
         "video-player"
       );
 
-
-    /* =====================================================
-       JUDUL
-       ===================================================== */
 
     document.title =
       "Sports77HD - " +
@@ -279,6 +257,7 @@
         "page-title"
       );
 
+
     if (pageTitle) {
       pageTitle.textContent =
         "Sports77HD - " +
@@ -286,28 +265,16 @@
     }
 
 
-    /* =====================================================
-       PEMUTARAN
-       ===================================================== */
-
     let hls = null;
 
 
     if (activeMatch.src) {
-
-      /*
-       * M3U8
-       */
 
       if (
         activeMatch.src
           .toLowerCase()
           .includes(".m3u8")
       ) {
-
-        /*
-         * HLS native
-         */
 
         if (
           video.canPlayType(
@@ -318,13 +285,9 @@
           video.src =
             activeMatch.src;
 
-        }
+          video.load();
 
-        /*
-         * HLS.js
-         */
-
-        else if (
+        } else if (
           typeof Hls !== "undefined" &&
           Hls.isSupported()
         ) {
@@ -353,13 +316,7 @@
 
         }
 
-      }
-
-      /*
-       * MP4
-       */
-
-      else {
+      } else {
 
         video.src =
           activeMatch.src;
@@ -369,7 +326,6 @@
         video.play().catch(
           function () {}
         );
-
       }
 
     }
