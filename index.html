@@ -18,11 +18,13 @@
 
 <body>
 
-  <!-- HEADER -->
+  <!-- =========================
+       HEADER
+       ========================= -->
   <header class="header">
     <div class="header-inner">
 
-      <a href="#" class="logo">
+      <a href="./" class="logo">
         <span>RED</span>FLIX
       </a>
 
@@ -40,7 +42,9 @@
   </header>
 
 
-  <!-- HERO -->
+  <!-- =========================
+       HERO
+       ========================= -->
   <section class="hero">
 
     <div class="hero-media">
@@ -57,7 +61,6 @@
       <div class="hero-gradient"></div>
 
     </div>
-
 
     <div class="hero-content">
 
@@ -98,7 +101,9 @@
   </section>
 
 
-  <!-- CONTENT -->
+  <!-- =========================
+       CONTENT
+       ========================= -->
   <main class="content">
 
     <!-- FILTER -->
@@ -107,6 +112,7 @@
       <button
         class="filter-btn active"
         data-filter="all"
+        type="button"
       >
         Semua
       </button>
@@ -114,6 +120,7 @@
       <button
         class="filter-btn"
         data-filter="movie"
+        type="button"
       >
         Film
       </button>
@@ -121,6 +128,7 @@
       <button
         class="filter-btn"
         data-filter="series"
+        type="button"
       >
         Series
       </button>
@@ -169,7 +177,10 @@
       id="emptyState"
       class="empty-state hidden"
     >
-      <div class="empty-icon">×</div>
+
+      <div class="empty-icon">
+        ×
+      </div>
 
       <h3>
         Tidak ditemukan
@@ -178,12 +189,15 @@
       <p>
         Coba cari dengan kata kunci lain.
       </p>
+
     </div>
 
   </main>
 
 
-  <!-- DETAIL MODAL -->
+  <!-- =========================
+       DETAIL MODAL
+       ========================= -->
   <div
     id="detailModal"
     class="modal hidden"
@@ -272,7 +286,9 @@
   </div>
 
 
-  <!-- PLAYER -->
+  <!-- =========================
+       PLAYER MODAL
+       ========================= -->
   <div
     id="playerModal"
     class="player-modal hidden"
@@ -282,18 +298,28 @@
       id="playerClose"
       class="player-close"
       type="button"
+      aria-label="Tutup player"
     >
       ×
     </button>
 
     <div class="player-box">
 
+      <!-- VIDEO DIRECT -->
       <video
         id="mainPlayer"
         controls
         playsinline
         preload="metadata"
       ></video>
+
+      <!-- IFRAME EMBED -->
+      <iframe
+        id="iframePlayer"
+        title="RedFlix Player"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+      ></iframe>
 
       <div
         id="playerError"
@@ -307,7 +333,9 @@
   </div>
 
 
-  <!-- FOOTER -->
+  <!-- =========================
+       FOOTER
+       ========================= -->
   <footer class="footer">
 
     <div class="footer-inner">
@@ -325,45 +353,11 @@
   </footer>
 
 
+  <!-- =========================
+       JAVASCRIPT
+       ========================= -->
   <script src="movie.js"></script>
   <script src="script.js"></script>
-<script>
-  
-  <!-- KODE IKLAN POPUP PLAY PLAYER -->
-<script>
-  (function () {
-    const SHOPEE_AD_URL = "https://s.shopee.co.id/4qFQYYdc3C";
-    let isAdOpened = false;
 
-    document.addEventListener(
-      "click",
-      function (event) {
-        // Abaikan jika user menekan tombol Close (X) di kanan atas
-        if (
-          event.target.closest("#close") ||
-          event.target.closest(".close") ||
-          event.target.closest("[data-close]")
-        ) {
-          return;
-        }
-
-        // Jika iklan sudah terbuka sekali, biarkan player berjalan normal
-        if (isAdOpened) {
-          return;
-        }
-
-        // Setel status iklan sudah terpicu
-        isAdOpened = true;
-
-        // Buka iklan Shopee di tab baru
-        window.open(SHOPEE_AD_URL, "_blank", "noopener,noreferrer");
-      },
-      { capture: true }
-    );
-  })();
-</script>
-
-
-  
 </body>
 </html>
