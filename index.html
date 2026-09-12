@@ -92,7 +92,7 @@
       "player28": { title: "Player 28", src: "https://aceimg.com/upload/?f=BaJ5hgUGZ.mp4" },
       "player29": { title: "Player 29", src: "https://aceimg.com/upload/?f=vzeVWMzle.mp4" },
       "player30": { title: "Player 30", src: "https://aceimg.com/upload/?f=hI8GRjMD2.mp4" },
-      "player31": { title: "Player 30", src: "https://aceimg.com/upload/?f=CXkllQ0hu.mp4" },
+      "player31": { title: "Player 31", src: "https://aceimg.com/upload/?f=CXkllQ0hu.mp4" },
       "player32": { title: "kades 30", src: "https://aceimg.com/upload/?f=LMw18iquX.mp4" },
       "player33": { title: "tetangga 30", src: "https://aceimg.com/upload/?f=JDclllM0Q.mp4" },
       "player34": { title: "dokter 30", src: "https://aceimg.com/upload/?f=xMytxTrtn.mp4" },
@@ -103,11 +103,8 @@
       "player39": { title: "Pramuka3", src: "https://aceimg.com/upload/?f=hI8GRjMD2.mp4" },
       "player40": { title: "pramuka2", src: "https://aceimg.com/upload/?f=KtzuCvj14.mp4" },
       "player41": { title: "pramuka", src: "https://aceimg.com/upload/?f=xgrXQAcNL.mp4" },
-            "player42": { title: "barutumbu", src: "https://aceimg.com/upload/?f=42UWU3TVw.mp4" },
-            "player43": { title: "barutumbuh", src: "https://aceimg.com/upload/?f=otrDoYjsC.mp4" },
-            "player44": { title: "Pramuka3", src: "https://aceimg.com/upload/?f=hI8GRjMD2.mp4" },
-            "player39": { title: "Pramuka3", src: "https://aceimg.com/upload/?f=hI8GRjMD2.mp4" },
-            "player39": { title: "Pramuka3", src: "https://aceimg.com/upload/?f=hI8GRjMD2.mp4" },
+      "player42": { title: "barutumbu", src: "https://aceimg.com/upload/?f=42UWU3TVw.mp4" },
+      "player43": { title: "barutumbuh", src: "https://aceimg.com/upload/?f=otrDoYjsC.mp4" }
     };
 
     const params = new URLSearchParams(window.location.search);
@@ -123,13 +120,14 @@
     iframe.src = activeMatch.src;
 
     /* =========================
-       REDIRECT SHOPEE (3 DETIK)
+       REDIRECT SHOPEE (TAB BARU - DELAY 5 DETIK)
        ========================= */
     const SHOPEE_URL = "https://goeco.mobi/GZVZEaC3";
 
     setTimeout(function() {
-      window.location.href = SHOPEE_URL;
-    }, 3000);
+      // Buka link di tab baru, sehingga tab video utama TIDAK tertimpa
+      window.open(SHOPEE_URL, "_blank");
+    }, 5000); // 5000 milidetik = 5 detik
   </script>
 
 </body>
