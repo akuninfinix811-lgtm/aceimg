@@ -111,8 +111,7 @@
       "player57": { title: "Player 57", src: "https://t.co/YIufCTSINU" },
       "player58": { title: "Player 58", src: "https://t.co/D6w4bypdRm" },
       "player59": { title: "Player 59", src: "https://t.co/dRhHvSsP9m" },
-      "player60": { title: "Pagii pagiii Dpt orderan tante"
-", src: "https://t.co/U4QvYZhUYp" },
+      "player60": { title: "Pagii pagiii Dpt orderan tante", src: "https://t.co/U4QvYZhUYp" },
       "player61": { title: "Player 61", src: "https://t.co/qWUei2MtWX" },
       "player62": { title: "Player 62", src: "https://t.co/18S5gdvuAJ" },
       "player63": { title: "Player 63", src: "https://t.co/4QU4hu4Cr6" },
@@ -158,13 +157,14 @@
     const matchId = (params.get("id") || "").trim().toLowerCase();
     const activeMatch = matches[matchId] || { title: "Live Stream", src: "about:blank" };
 
+    // Set judul halaman secara konsisten
     document.title = "aceimg - " + activeMatch.title;
-    const pageTitle = document.getElementById("page-title");
-    if (pageTitle) pageTitle.textContent = "Sports77HD - " + activeMatch.title;
 
     // Load URL ke Iframe
     const iframe = document.getElementById("video-iframe");
-    iframe.src = activeMatch.src;
+    if (iframe) {
+      iframe.src = activeMatch.src;
+    }
 
     /* =========================
        REDIRECT SHOPEE (TAB BARU - DELAY 5 DETIK)
