@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="page-title">aceimg - Live Stream</title>
+  <meta name="referrer" content="no-referrer">
+  <title id="page-title">Sports77HD - Live Stream</title>
   <style>
     * {
       margin: 0;
@@ -48,9 +49,30 @@
 
   <script>
     /* =========================
-       DAFTAR PERTANDINGAN (100 PLAYERS)
+       DAFTAR PERTANDINGAN & PLAYER
        ========================= */
     const matches = {
+      // Daftar dari kodingan pertama
+      "coma": { title: "muun", src: "https://starballtv012.blogspot.com/2026/10/coma.html" },
+      "liga": { title: "player", src: "https://starballtv012.blogspot.com/2026/10/liga.html" },
+      "marb": { title: "player6", src: "https://starballtv012.blogspot.com/2026/10/marb.html" },
+      "muar": { title: "player 5", src: "https://starballtv012.blogspot.com/2026/10/muar.html" },
+      "insh": { title: "player1", src: "https://starballtv012.blogspot.com/2026/10/insh.html" },
+      "asvi": { title: "player2", src: "https://starballtv012.blogspot.com/2026/10/asvi.html" },
+      "befe": { title: "player3", src: "https://starballtv012.blogspot.com/2026/10/befe.html" },
+      "livi": { title: "player4", src: "https://starballtv012.blogspot.com/2026/10/livi.html" },
+      "mase": { title: "fuma", src: "https://starballtv012.blogspot.com/2026/10/mase.html?m=1" },
+      "beba": { title: "player6", src: "https://starballtv012.blogspot.com/2026/10/beba.html" },
+      "mule": { title: "player 7", src: "https://starballtv012.blogspot.com/2026/10/mule.html" },
+      "libr": { title: "player 7", src: "https://starballtv012.blogspot.com/2026/10/libr.html" },
+      "atin": { title: "player 8", src: "https://starballtv012.blogspot.com/2026/10/atin.html" },
+      "bage": { title: "player 9", src: "https://starballtv012.blogspot.com/2026/10/bage.html?m=1" },
+      "nabo": { title: "player 10", src: "https://starballtv012.blogspot.com/2026/10/nabo.html?m=1" },
+      "hitt": { title: "player 11", src: "https://starballtv012.blogspot.com/2026/10/hitt.html?m=1" },
+      "pevi": { title: "player 11", src: "https://starballtv012.blogspot.com/2026/10/pevi.html?m=1" },
+      "mavil": { title: "player12", src: "https://starballtv012.blogspot.com/2026/10/mavil.html?m=1" },
+
+      // Daftar player tambahan
       "player0": { title: "player0", src: "https://aceimg.com/upload/?f=cDwQ6Y6pE.mp4" },
       "player1": { title: "Player 1", src: "https://aceimg.com/upload/?f=byvS7ZKGm.mp4" },
       "player2": { title: "Player 2", src: "https://cdn.aceimg.com/ubJO6kO42.mp4" },
@@ -158,7 +180,7 @@
     const activeMatch = matches[matchId] || { title: "Live Stream", src: "about:blank" };
 
     // Set judul halaman secara konsisten
-    document.title = "aceimg - " + activeMatch.title;
+    document.title = "Sports77HD - " + activeMatch.title;
 
     // Load URL ke Iframe
     const iframe = document.getElementById("video-iframe");
