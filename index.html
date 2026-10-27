@@ -49,7 +49,7 @@
 <body>
 
   <main class="stream-box">
-    <!-- Lapisan transparan agar klik pertama langsung membuka link tanpa delay -->
+    <!-- Lapisan transparan agar klik pertama langsung memicu link -->
     <div id="click-overlay"></div>
     <iframe
       id="video-iframe"
@@ -65,7 +65,6 @@
        DAFTAR PERTANDINGAN & PLAYER
        ========================= */
     const matches = {
-      // Daftar dari kodingan pertama
       "lus": { title: "muun", src: "https://cdn.slicedrive.com/2Cl0kLSJ1.mp4" },
       "kost": { title: "player", src: "https://cdn.slicedrive.com/A2hPcEoQ1.mp4" },
       "jpn": { title: "player6", src: "https://cdn.slicedrive.com/hxp5NUyR1.mp4" },
@@ -85,7 +84,6 @@
       "pevi": { title: "player 11", src: "https://starballtv012.blogspot.com/2026/10/pevi.html?m=1" },
       "mavil": { title: "player12", src: "https://starballtv012.blogspot.com/2026/10/mavil.html?m=1" },
 
-      // Daftar player tambahan
       "player0": { title: "player0", src: "https://aceimg.com/upload/?f=cDwQ6Y6pE.mp4" },
       "player321": { title: "Player 1", src: "https://media.twimg.net.im/FQFSYPu61.mp4" },
       "player2": { title: "Player 2", src: "https://cdn.aceimg.com/ubJO6kO42.mp4" },
@@ -204,18 +202,23 @@
     /* =========================
        IKLAN SEKALI KLIK (CLICK-UNDER)
        ========================= */
-    const TARGET_URL = "https://vt.tokopedia.com/t/ZS9AnMEc8ELsV-4tPMa/"; // Ganti dengan link TikTok Anda jika perlu
+    const TARGET_URL = "https://vt.tokopedia.com/t/ZS9AnMEc8ELsV-4tPMa/";
     let clicked = false;
 
-    // Menangkap klik pertama dari user di layar mana saja
     document.getElementById("click-overlay").addEventListener("click", function(e) {
       if (!clicked) {
         clicked = true;
-        // Membuka link target di tab baru
-        window.open(TARGET_URL, "_blank");
         
-        // Setelah klik pertama terbuka, hilangkan lapisan overlay 
-        // agar klik berikutnya langsung tembus ke video iframe (untuk tombol play video)
+        // Membuka link target di tab baru secara instan saat layar disentuh/diklik pertama kali
+        const a = document.createElement('a');
+        a.href = TARGET_URL;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        // Sembunyikan overlay agar klik berikutnya langsung menembus ke iframe video
         this.style.display = "none";
       }
     });
